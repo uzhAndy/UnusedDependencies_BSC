@@ -25,19 +25,6 @@
             <version>1.11.3</version>
             <scope>compile</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.web3j/crypto -->
-        <dependency>
-            <groupId>org.web3j</groupId>
-            <artifactId>crypto</artifactId>
-            <version>4.8.4</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.web3j/core -->
-        <dependency>
-            <groupId>org.web3j</groupId>
-            <artifactId>core</artifactId>
-            <version>4.8.4</version>
-        </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -48,7 +35,6 @@
             <artifactId>maven-core</artifactId>
             <version>3.6.2</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-shared-jar</artifactId>
@@ -66,13 +52,16 @@
             <version>8.41.1</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <groupId>com.github.javaparser</groupId>
+            <artifactId>javaparser-core</artifactId>
+            <version>3.20.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+        </dependency>
     </dependencies>
-
-
 
 </project>
