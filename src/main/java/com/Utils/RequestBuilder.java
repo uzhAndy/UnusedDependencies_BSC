@@ -1,11 +1,10 @@
-package com;
+package com.Utils;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -61,19 +60,8 @@ public class RequestBuilder {
             JSONObject jsonObject = (JSONObject) jsonParser.parse(inline);
             JSONObject response = (JSONObject) jsonObject.get("response");
 
-//            writeToTxtFile(importedClass, inline);
             return (JSONArray) response.get("docs");
 
-
         }
-    }
-
-    private void writeToTxtFile(String className, String json) throws IOException {
-
-        FileWriter writer = new FileWriter("debugging/" + className + ".txt");
-
-        writer.append(json);
-        writer.close();
-
     }
 }

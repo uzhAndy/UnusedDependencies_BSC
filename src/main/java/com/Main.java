@@ -1,9 +1,8 @@
 package com;
 
-import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import com.Components.DependencyAnalyzer;
+import com.Components.Project;
 import org.apache.maven.model.Dependency;
-import java.util.ArrayList;
-
 
 public class Main {
 
@@ -12,16 +11,20 @@ public class Main {
     public static void main(String[] args){
 
         try{
+            Project project = new Project(FILE_PATH);
 
-            Project currentProject = new Project(FILE_PATH);
+            DependencyAnalyzer dependencyAnalyzer = new DependencyAnalyzer(project);
+            dependencyAnalyzer.determineDependenciesUsage();
 
-            DependencyAnalyzer dependencyAnalyzer = new DependencyAnalyzer(currentProject);
-            ArrayList<Dependency> importedDependencies = dependencyAnalyzer.determineUsedDependenciesFromImportedClasses();
-            ArrayList<Dependency> notImportedDependencies = dependencyAnalyzer.determineUnusedDependenciesFromImportedClasses();
+            System.out.println("Unused Dependencies: ");
 
-            System.out.println("Number of unused dependencies:");
+            for(Dependency dependency : dependencyAnalyzer.getUnusedDependencies()){
+                System.out.println(dependency);
+            }
 
-            for(Dependency dependency: notImportedDependencies){
+            System.out.println("Used Dependencies: ");
+
+            for(Dependency dependency : dependencyAnalyzer.getUsedDependencies()){
                 System.out.println(dependency);
             }
 

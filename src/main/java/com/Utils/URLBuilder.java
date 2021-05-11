@@ -1,4 +1,4 @@
-package com;
+package com.Utils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
