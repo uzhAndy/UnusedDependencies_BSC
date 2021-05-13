@@ -36,10 +36,12 @@ public class Project {
             if (itm.getAbsolutePath().endsWith(".java")
                     && !itm.getAbsolutePath().contains("\\.")) {
                 this.projectFiles.add(ProjectFile.initializeProjectFile(itm));
-            } else if (!itm.getAbsolutePath().contains("\\.")){
+            } else if (itm.getAbsolutePath().contains("pom.xml")){
                 this.buildFiles.add(BuildFile.initializeBuildFile(itm));
             }
         }
+
+        this.determineUsedImports();
     }
 
     public ArrayList<ProjectFile> getProjectFiles() {
@@ -50,7 +52,7 @@ public class Project {
         return buildFiles;
     }
 
-    public void determineUsedImports(){
+    private void determineUsedImports(){
 
         Set<ImportDeclaration> allUsedImports = new HashSet<>();
 

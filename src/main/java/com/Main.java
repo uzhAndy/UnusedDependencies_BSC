@@ -4,9 +4,12 @@ import com.Components.DependencyAnalyzer;
 import com.Components.Project;
 import org.apache.maven.model.Dependency;
 
+import java.io.File;
+import java.io.FileWriter;
+
 public class Main {
 
-    private static final String FILE_PATH = "C:/Users/LenovoThinkPadT450s/OneDrive - Universität Zürich UZH/Studium/Bachelor Thesis/Repository mining/SourceCodeAnalyzer";
+    private static final String FILE_PATH = "C:/Users/LenovoThinkPadT450s/OneDrive - Universität Zürich UZH/Studium/Bachelor Thesis/Repository mining/sample_projects/maven-samples-master/single-module";
 
     public static void main(String[] args){
 
@@ -16,19 +19,31 @@ public class Main {
             DependencyAnalyzer dependencyAnalyzer = new DependencyAnalyzer(project);
             dependencyAnalyzer.determineDependenciesUsage();
 
-            System.out.println("Unused Dependencies: ");
+            StringBuilder report = new StringBuilder();
+
+            report.append("Unused Dependencies: \n");
 
             for(Dependency dependency : dependencyAnalyzer.getUnusedDependencies()){
-                System.out.println(dependency);
+                report.append(dependency.toString()).append("\n");
             }
 
-            System.out.println("Used Dependencies: ");
+            report.append("Used Dependencies: \n");
 
             for(Dependency dependency : dependencyAnalyzer.getUsedDependencies()){
-                System.out.println(dependency);
+                report.append(dependency.toString()).append("\n");
             }
 
-        } catch(Exception e) {e.printStackTrace();}
+            String reportFilePath = FILE_PATH + "/DependencyReport.txt";
+
+            File newTxt = new File(reportFilePath);
+            FileWriter fw = new FileWriter(reportFilePath);
+
+            fw.write(report.toString());
+            fw.close();
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

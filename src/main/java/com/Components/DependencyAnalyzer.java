@@ -2,14 +2,11 @@ package com.Components;
 
 import com.Utils.RequestBuilder;
 import com.github.javaparser.ast.ImportDeclaration;
-import com.puppycrawl.tools.checkstyle.api.FullIdent;
 import org.apache.maven.model.Dependency;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -31,15 +28,8 @@ public class DependencyAnalyzer {
     }
 
     public void determineDependenciesUsage(){
-        this.project.determineUsedImports();
-
         this.addUsedDependencies();
-        for(Dependency declaredDependency : this.project.getDeclaredDependencies()){
-            if(!this.usedDependencies.contains(declaredDependency)){
-                this.unusedDependencies.add(declaredDependency);
-            }
-        }
-
+        this.addUnusedDependencies();
     }
 
     public ArrayList<Dependency> getUsedDependencies() {
@@ -50,13 +40,21 @@ public class DependencyAnalyzer {
         return unusedDependencies;
     }
 
+    private void addUnusedDependencies(){
+        for(Dependency declaredDependency : this.project.getDeclaredDependencies()){
+            if(!this.usedDependencies.contains(declaredDependency)){
+                this.unusedDependencies.add(declaredDependency);
+            }
+        }
+    }
+
     private void addUsedDependencies(){
         try{
             for(ImportDeclaration importDeclaration : this.project.getUsedImports()){
                 if(!importDeclaration.getNameAsString().startsWith("java.")){
 
                     Dependency dependencyOfClass = this.determineDependencyOfClass(importDeclaration.getNameAsString());
-                    if(dependencyOfClass.getGroupId() != null){
+                    if(dependencyOfClass.getGroupId() != null && !this.usedDependencies.contains(dependencyOfClass)){
                         this.usedDependencies.add(dependencyOfClass);
                     }
                 }
@@ -96,6 +94,15 @@ public class DependencyAnalyzer {
             }
             i++;
         }
+
+        if(classDependency.getGroupId() == null && importedClass.split("\\.").length > 2){
+            String[] importedClassSplit = importedClass.split("\\.");
+            String higherOrderImport = String.join(".", Arrays.copyOfRange(importedClassSplit, 0,importedClassSplit.length - 1));
+
+            return this.determineDependencyOfClass(higherOrderImport);
+
+        }
+
         return classDependency;
     }
 

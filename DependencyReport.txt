@@ -1,0 +1,18 @@
+Unused Dependencies: 
+Dependency {groupId=org.apache.maven.plugins, artifactId=maven-compiler-plugin, version=3.8.1, type=jar}
+Used Dependencies: 
+Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
+Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
+Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
+Dependency {groupId=com.googlecode.json-simple, artifactId=json-simple, version=1.1.1, type=jar}
+Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
+Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
+Dependency {groupId=com.googlecode.json-simple, artifactId=json-simple, version=1.1.1, type=jar}
+Dependency {groupId=com.github.javaparser, artifactId=javaparser-core, version=3.20.2, type=jar}
+Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
+Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
+Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
+Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
+Dependency {groupId=com.googlecode.json-simple, artifactId=json-simple, version=1.1.1, type=jar}
+Dependency {groupId=com.googlecode.json-simple, artifactId=json-simple, version=1.1.1, type=jar}
+Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
