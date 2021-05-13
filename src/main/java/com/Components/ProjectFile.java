@@ -8,8 +8,7 @@ import org.apache.maven.model.Dependency;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+
 
 public class ProjectFile extends File {
 
@@ -22,11 +21,15 @@ public class ProjectFile extends File {
     private ArrayList<FullIdent> unUsedImportsFullIndents = new ArrayList<>();
     private ArrayList<ImportDeclaration> unUsedImports = new ArrayList<>();
 
-    private ArrayList<Dependency> usedDependencies = new ArrayList<>();
-
     private DetailAST projectAST;
 
     private String package_;
+
+    /***
+     * The ProjectFile class extends the regular file class to have additional functionalities which are relevant to the
+     * dependency usage analysis by converting the .java file to its DetailAST representation
+     * @param pathname
+     */
 
     public ProjectFile(String pathname){
         super(pathname);
@@ -39,6 +42,12 @@ public class ProjectFile extends File {
         }
     }
 
+    /***
+     * Simplification of initialization of the ProjectFile class
+     * @param file .java file
+     * @return
+     */
+
     public static ProjectFile initializeProjectFile(File file){
         try{
             return new ProjectFile(file.getAbsolutePath());
@@ -48,15 +57,34 @@ public class ProjectFile extends File {
         }
     }
 
-
-    public void addUsedDependency(Dependency dependency){
-        this.usedDependencies.add(dependency);
-    }
-
+    /***
+     * getter method of DetailAST representation of ProjectFile
+     * @return
+     */
     public DetailAST getProjectAST() {
         return projectAST;
     }
 
+    /***
+     * getter method of used imports of the ProjectFile
+     * @return list of usedImports
+     */
+    public ArrayList<ImportDeclaration> getUsedImports() {
+        return usedImports;
+    }
+
+    /***
+     * getter method of unused imports of the ProjectFile
+     * @return list of UnUsedImports
+     */
+    public ArrayList<ImportDeclaration> getUnUsedImports() {
+        return unUsedImports;
+    }
+
+    /***
+     * each import statement of the ProjectFile is classified in either a UsedImport or UnusedImport by traversing the
+     * DetailAST representation and passing each branch and leaf into the Checkstyle UnusedImportsCheck
+     */
     private void classifyImports(){
 
         ArrayList<DetailAST> listAST = getIndividualAST(this.projectAST);
@@ -77,45 +105,33 @@ public class ProjectFile extends File {
         this.unUsedImportsFullIndents = unusedImportsCheck.getUnUsedImports();
     }
 
+    /***
+     * Checkstyle uses the FullIndent class which contains the row of where the import is declared, to avoid duplicates,
+     * each FullIndent is converted into a ImportDeclaration and only added if the import has not already been added.
+     */
+
     private void convertSetOfFullIndentToArrayListOfImportDeclaration(){
 
         for(FullIdent usedImport: this.usedImportsFullIndents){
-            this.usedImports.add(new ImportDeclaration(
+            ImportDeclaration currImport = new ImportDeclaration(
                     usedImport.getText().replaceAll("\\[.*]", ""),
                     false,
                     false
-            ));
+            );
+
+            if(!this.usedImports.contains(currImport)){
+                this.usedImports.add(currImport);
+            }
         }
     }
 
-    public ArrayList<FullIdent> getDeclaredImportsFullIndent() {
-        return declaredImportsFullIndent;
-    }
-
-    public ArrayList<ImportDeclaration> getDeclaredImports() {
-        return declaredImports;
-    }
-
-    public ArrayList<FullIdent> getUsedImportsFullIndents() {
-        return usedImportsFullIndents;
-    }
-
-    public ArrayList<ImportDeclaration> getUsedImports() {
-        return usedImports;
-    }
-
-    public ArrayList<FullIdent> getUnUsedImportsFullIndents() {
-        return unUsedImportsFullIndents;
-    }
-
-    public ArrayList<ImportDeclaration> getUnUsedImports() {
-        return unUsedImports;
-    }
-
-    public ArrayList<Dependency> getUsedDependencies() {
-        return usedDependencies;
-    }
-
+    /***
+     * to check which imports are used in the source code, a list of the indivual nodes have to be passed to the
+     * Checkstyle class UnusedImportsCheck. By recursively calling {@link #getIndividualAST(DetailAST) getIndividualAST}
+     * on the root's children and siblings.
+     * @param root given a .java file converted into its DetailAST representation
+     * @return list of the individual nodes
+     */
 
     private ArrayList<DetailAST> getIndividualAST(DetailAST root){
         if(root == null) return new ArrayList<>();

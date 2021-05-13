@@ -4,6 +4,7 @@ import com.Utils.RequestBuilder;
 import com.github.javaparser.ast.ImportDeclaration;
 import org.apache.maven.model.Dependency;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,10 +19,10 @@ import org.json.simple.parser.ParseException;
 
 public class DependencyAnalyzer {
 
-    private Project project;
+    private final Project project;
 
-    private ArrayList<Dependency> usedDependencies = new ArrayList<>();
-    private ArrayList<Dependency> unusedDependencies = new ArrayList<>();
+    private final ArrayList<Dependency> usedDependencies = new ArrayList<>();
+    private final ArrayList<Dependency> unusedDependencies = new ArrayList<>();
 
     public DependencyAnalyzer(Project project){
         this.project = project;
@@ -30,6 +31,28 @@ public class DependencyAnalyzer {
     public void determineDependenciesUsage(){
         this.addUsedDependencies();
         this.addUnusedDependencies();
+    }
+
+    public void produceUsageReport(String fPath) throws IOException {
+
+        StringBuilder report = new StringBuilder();
+
+        report.append("Unused Dependencies: \n");
+
+        for(Dependency dependency : this.getUnusedDependencies()){
+            report.append(dependency.toString()).append("\n");
+        }
+
+        report.append("Used Dependencies: \n");
+
+        for(Dependency dependency : this.getUsedDependencies()){
+            report.append(dependency.toString()).append("\n");
+        }
+
+        FileWriter fw = new FileWriter(fPath);
+
+        fw.write(report.toString());
+        fw.close();
     }
 
     public ArrayList<Dependency> getUsedDependencies() {

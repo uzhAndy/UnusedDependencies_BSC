@@ -5,7 +5,6 @@ import org.apache.maven.model.Dependency;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,7 +21,7 @@ public class Project {
 
     /***
      * Constructor of Project
-     * scans directory and assigns .java files to a list of ProjectFiles pom.xml files are added to a list of BuildFiles
+     * scans directory and assigns .java files to a list of ProjectFiles pom.xml files are added to a list of BuildFiles, also the determines whether each declared import is used
      * @param src_path source path of the project
      */
     public Project(String src_path){
@@ -44,14 +43,43 @@ public class Project {
         this.determineUsedImports();
     }
 
+    /***
+     * getter for class variable projectFiles
+     * @return list of ProjectFiles
+     */
+
     public ArrayList<ProjectFile> getProjectFiles() {
         return projectFiles;
     }
 
+    /***
+     * getter for class variable buildFiles
+     * @return list of BuildFiles
+     */
     public ArrayList<BuildFile> getBuildFiles() {
         return buildFiles;
     }
 
+    /***
+     * getter for class variable usedImports
+     * @return list of the imports which are used in the source code
+     */
+
+    public ArrayList<ImportDeclaration> getUsedImports() {
+        return uniqueImports;
+    }
+
+    public ArrayList<Dependency> getDeclaredDependencies(){
+        Set<Dependency> uniqueDependencies = new HashSet<>();
+        for(BuildFile buildFile : this.getBuildFiles()){
+            uniqueDependencies.addAll(new HashSet<>(buildFile.getDeclaredDependencies()));
+        }
+        return new ArrayList<>(uniqueDependencies);
+    }
+
+    /***
+     * Consolidates all declared and used imports in the ProjectFiles to a list without duplicates
+     */
     private void determineUsedImports(){
 
         Set<ImportDeclaration> allUsedImports = new HashSet<>();
@@ -63,27 +91,18 @@ public class Project {
         this.uniqueImports = new ArrayList<>(allUsedImports);
     }
 
-    public ArrayList<ImportDeclaration> getUsedImports() {
-        return uniqueImports;
-    }
-
-    public ArrayList<Dependency> getDeclaredDependencies(){
-
-        Set<Dependency> uniqueDependencies = new HashSet<>();
-
-        for(BuildFile buildFile : this.getBuildFiles()){
-            uniqueDependencies.addAll(new HashSet<>(buildFile.getDeclaredDependencies()));
-        }
-
-        return new ArrayList<>(uniqueDependencies);
-
-    }
+    /***
+     * getting all files from the file path given in the constructor
+     * @param files
+     * @param fileArrayList
+     * @return list of .java and pom.xml files
+     */
 
     private ArrayList<File> filePaths(File[] files, ArrayList<File> fileArrayList) {
 
         for (File file : files) {
             if (file.isDirectory() && !file.getAbsolutePath().contains("target")) {
-                filePaths(file.listFiles(), fileArrayList);
+                this.filePaths(file.listFiles(), fileArrayList);
             } else if (file.getAbsolutePath().contains(".java") || file.getAbsolutePath().contains(".xml")){
                 fileArrayList.add(file.getAbsoluteFile());
             }
