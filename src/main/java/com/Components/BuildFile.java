@@ -18,13 +18,52 @@ public class BuildFile extends File {
     private String package_;
     private static String BUILD_FILE_TYPE = "MAVEN";
 
+
+    /***The BuildFile class extends the regular file class to have additional functionalities which are relevant to the
+     * dependency usage analysis by converting the .java file to its DetailAST representation
+     * @param pathname
+     */
     public BuildFile(String pathname) {
         super(pathname);
         this.determineDeclaredDependencies();
     }
 
+    /***Simplification of initialization of the ProjectFile class
+     * @param file .java file
+     * @return projectFile instance
+     */
     public static BuildFile initializeBuildFile(File file){
         return new BuildFile(file.getAbsolutePath());
+    }
+
+    /***
+     * getter method of declared dependencies in the build file
+     * @return declaredDependencies
+     */
+    public ArrayList<Dependency> getDeclaredDependencies() {
+        return declaredDependencies;
+    }
+
+    /***
+     * retrieving a list of dependencies declared in the buildFile (currently only maven) and storing
+     * the dependencies to the list of declared dependencies
+     */
+    private void determineDeclaredDependencies(){
+        try{
+            MavenXpp3Reader reader = new MavenXpp3Reader();
+            Model model = reader.read(new FileReader(this.getAbsolutePath()));
+            this.declaredDependencies.addAll(model.getDependencies());
+        } catch (XmlPullParserException xmlPullParserException) {
+            xmlPullParserException.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+    }
+
+    public ArrayList<Dependency> getImportedDependencies() {
+        return importedDependencies;
     }
 
     public void setDeclaredDependencies(ArrayList<Dependency> declaredDependencies) {
@@ -41,27 +80,5 @@ public class BuildFile extends File {
 
     public void addImportedDependency(Dependency dependency){
         this.importedDependencies.add(dependency);
-    }
-
-    public ArrayList<Dependency> getDeclaredDependencies() {
-        return declaredDependencies;
-    }
-
-    public ArrayList<Dependency> getImportedDependencies() {
-        return importedDependencies;
-    }
-
-    private void determineDeclaredDependencies(){
-        try{
-            MavenXpp3Reader reader = new MavenXpp3Reader();
-            Model model = reader.read(new FileReader(this.getAbsolutePath()));
-            this.declaredDependencies.addAll(model.getDependencies());
-        } catch (XmlPullParserException xmlPullParserException) {
-            xmlPullParserException.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
     }
 }

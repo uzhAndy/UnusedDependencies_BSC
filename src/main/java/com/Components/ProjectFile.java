@@ -25,8 +25,7 @@ public class ProjectFile extends File {
 
     private String package_;
 
-    /***
-     * The ProjectFile class extends the regular file class to have additional functionalities which are relevant to the
+    /***The ProjectFile class extends the regular file class to have additional functionalities which are relevant to the
      * dependency usage analysis by converting the .java file to its DetailAST representation
      * @param pathname
      */
@@ -42,10 +41,9 @@ public class ProjectFile extends File {
         }
     }
 
-    /***
-     * Simplification of initialization of the ProjectFile class
+    /***Simplification of initialization of the ProjectFile class
      * @param file .java file
-     * @return
+     * @return projectFile instance
      */
 
     public static ProjectFile initializeProjectFile(File file){
@@ -57,32 +55,28 @@ public class ProjectFile extends File {
         }
     }
 
-    /***
-     * getter method of DetailAST representation of ProjectFile
+    /***getter method of DetailAST representation of ProjectFile
      * @return
      */
     public DetailAST getProjectAST() {
         return projectAST;
     }
 
-    /***
-     * getter method of used imports of the ProjectFile
+    /***getter method of used imports of the ProjectFile
      * @return list of usedImports
      */
     public ArrayList<ImportDeclaration> getUsedImports() {
         return usedImports;
     }
 
-    /***
-     * getter method of unused imports of the ProjectFile
+    /***getter method of unused imports of the ProjectFile
      * @return list of UnUsedImports
      */
     public ArrayList<ImportDeclaration> getUnUsedImports() {
         return unUsedImports;
     }
 
-    /***
-     * each import statement of the ProjectFile is classified in either a UsedImport or UnusedImport by traversing the
+    /***each import statement of the ProjectFile is classified in either a UsedImport or UnusedImport by traversing the
      * DetailAST representation and passing each branch and leaf into the Checkstyle UnusedImportsCheck
      */
     private void classifyImports(){
@@ -105,8 +99,7 @@ public class ProjectFile extends File {
         this.unUsedImportsFullIndents = unusedImportsCheck.getUnUsedImports();
     }
 
-    /***
-     * Checkstyle uses the FullIndent class which contains the row of where the import is declared, to avoid duplicates,
+    /***Checkstyle uses the FullIndent class which contains the row of where the import is declared, to avoid duplicates,
      * each FullIndent is converted into a ImportDeclaration and only added if the import has not already been added.
      */
 
@@ -125,8 +118,7 @@ public class ProjectFile extends File {
         }
     }
 
-    /***
-     * to check which imports are used in the source code, a list of the indivual nodes have to be passed to the
+    /***to check which imports are used in the source code, a list of the indivual nodes have to be passed to the
      * Checkstyle class UnusedImportsCheck. By recursively calling {@link #getIndividualAST(DetailAST) getIndividualAST}
      * on the root's children and siblings.
      * @param root given a .java file converted into its DetailAST representation
