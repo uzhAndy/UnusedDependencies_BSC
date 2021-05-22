@@ -5,7 +5,7 @@ import java.net.URL;
 
 public class URLBuilder {
     private final String URLBase = "https://search.maven.org/solrsearch/select?q=fc:";
-    private final String URLSuffix = "&rows=1000&wt=json";
+    private final String URLSuffix = "&rows=100&wt=json";
     private URL requestURL;
 
     public URLBuilder(String importedClass) throws MalformedURLException {

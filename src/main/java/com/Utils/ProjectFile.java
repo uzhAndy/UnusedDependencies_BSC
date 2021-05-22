@@ -1,10 +1,10 @@
-package com.Components;
+package com.Utils;
 
+import com.Components.UnusedImportsCheck;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.puppycrawl.tools.checkstyle.JavaParser;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.FullIdent;
-import org.apache.maven.model.Dependency;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,7 +23,6 @@ public class ProjectFile extends File {
 
     private DetailAST projectAST;
 
-    private String package_;
 
     /***The ProjectFile class extends the regular file class to have additional functionalities which are relevant to the
      * dependency usage analysis by converting the .java file to its DetailAST representation
@@ -33,9 +32,11 @@ public class ProjectFile extends File {
     public ProjectFile(String pathname){
         super(pathname);
         try{
+//            System.out.println("Trying to parse: " + this.getAbsolutePath());
             this.projectAST = JavaParser.parseFile(this.getAbsoluteFile(), JavaParser.Options.WITHOUT_COMMENTS);
             this.classifyImports();
             this.convertSetOfFullIndentToArrayListOfImportDeclaration();
+//            this.usedImports.forEach(imp -> System.out.println(imp));
         } catch (Exception e){
             e.printStackTrace();
         }

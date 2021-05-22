@@ -1,4 +1,4 @@
-package com.Components;
+package com.Utils;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
@@ -15,7 +15,6 @@ public class BuildFile extends File {
 
     private ArrayList<Dependency> declaredDependencies = new ArrayList();
     private ArrayList<Dependency> importedDependencies = new ArrayList<>();
-    private String package_;
     private static String BUILD_FILE_TYPE = "MAVEN";
 
 
@@ -53,6 +52,7 @@ public class BuildFile extends File {
             MavenXpp3Reader reader = new MavenXpp3Reader();
             Model model = reader.read(new FileReader(this.getAbsolutePath()));
             this.declaredDependencies.addAll(model.getDependencies());
+//            this.declaredDependencies.forEach(dependency -> System.out.println(dependency));
         } catch (XmlPullParserException xmlPullParserException) {
             xmlPullParserException.printStackTrace();
         } catch (FileNotFoundException e) {

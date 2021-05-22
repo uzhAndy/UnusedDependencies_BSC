@@ -1,18 +1,20 @@
-Unused Dependencies: 
-Dependency {groupId=org.apache.maven.plugins, artifactId=maven-compiler-plugin, version=3.8.1, type=jar}
-Used Dependencies: 
-Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
-Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
-Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
-Dependency {groupId=com.googlecode.json-simple, artifactId=json-simple, version=1.1.1, type=jar}
-Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
-Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
-Dependency {groupId=com.googlecode.json-simple, artifactId=json-simple, version=1.1.1, type=jar}
-Dependency {groupId=com.github.javaparser, artifactId=javaparser-core, version=3.20.2, type=jar}
-Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
-Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
-Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
-Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
-Dependency {groupId=com.googlecode.json-simple, artifactId=json-simple, version=1.1.1, type=jar}
-Dependency {groupId=com.googlecode.json-simple, artifactId=json-simple, version=1.1.1, type=jar}
-Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar}
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=com.googlecode.json-simple, artifactId=json-simple, version=1.1.1, type=jar};USED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=com.puppycrawl.tools, artifactId=checkstyle, version=8.42, type=jar};USED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=com.github.javaparser, artifactId=javaparser-core, version=3.20.2, type=jar};USED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=org.apache.maven, artifactId=maven-core, version=null, type=jar};USED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=org.apache.maven.shared, artifactId=maven-common-artifact-filters, version=null, type=jar};UNUSED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=org.apache.maven.plugin-tools, artifactId=maven-plugin-annotations, version=null, type=jar};UNUSED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=org.mockito, artifactId=mockito-core, version=null, type=jar};UNUSED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=org.powermock, artifactId=powermock-api-mockito2, version=null, type=jar};UNUSED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=org.apache.maven.shared, artifactId=maven-artifact-transfer, version=null, type=jar};UNUSED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=org.apache.maven.surefire, artifactId=surefire-api, version=${project.version}, type=jar};UNUSED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=org.apache.maven.surefire, artifactId=surefire-shared-utils, version=3.0.0-M4, type=jar};UNUSED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=com.google.code.findbugs, artifactId=jsr305, version=null, type=jar};UNUSED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=org.apache.maven.surefire, artifactId=surefire-extensions-api, version=${project.version}, type=jar};UNUSED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=org.apache.maven.surefire, artifactId=surefire-booter, version=${project.version}, type=jar};UNUSED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=org.apache.maven.plugins, artifactId=maven-compiler-plugin, version=3.8.1, type=jar};UNUSED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=org.powermock, artifactId=powermock-core, version=null, type=jar};UNUSED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=org.jacoco, artifactId=org.jacoco.agent, version=null, type=jar};UNUSED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=org.powermock, artifactId=powermock-module-junit4, version=null, type=jar};UNUSED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=org.codehaus.plexus, artifactId=plexus-java, version=null, type=jar};UNUSED
+C:\Users\LenovoThinkPadT450s\OneDrive - Universität Zürich UZH\Studium\Bachelor Thesis\Repository mining\SourceCodeAnalyzer\pom.xml;Dependency {groupId=org.fusesource.jansi, artifactId=jansi, version=null, type=jar};UNUSED
