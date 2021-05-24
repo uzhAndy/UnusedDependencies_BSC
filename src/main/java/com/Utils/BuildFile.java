@@ -24,7 +24,7 @@ public class BuildFile extends File {
      */
     public BuildFile(String pathname) {
         super(pathname);
-        this.determineDeclaredDependencies();
+        this.determineDeclaredDependenciesGradle();
     }
 
     /***Simplification of initialization of the ProjectFile class
@@ -60,6 +60,12 @@ public class BuildFile extends File {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
+    }
+
+    private void determineDeclaredDependenciesGradle(){
+
+
+
     }
 
     public ArrayList<Dependency> getImportedDependencies() {
