@@ -5,10 +5,7 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class BuildFile extends File {
@@ -24,7 +21,11 @@ public class BuildFile extends File {
      */
     public BuildFile(String pathname) {
         super(pathname);
-        this.determineDeclaredDependenciesGradle();
+        if(pathname.contains("build.gradle")){
+            this.determineDeclaredDependenciesGradle();
+        } else if (pathname.contains("pom.xml")){
+            this.determineDeclaredDependenciesMaven();
+        }
     }
 
     /***Simplification of initialization of the ProjectFile class
@@ -47,10 +48,10 @@ public class BuildFile extends File {
      * retrieving a list of dependencies declared in the buildFile (currently only maven) and storing
      * the dependencies to the list of declared dependencies
      */
-    private void determineDeclaredDependencies(){
+    private void determineDeclaredDependenciesMaven(){
         try{
             MavenXpp3Reader reader = new MavenXpp3Reader();
-            Model model = reader.read(new FileReader(this.getAbsolutePath()));
+            Model model = reader.read(new FileReader(this.getAbsoluteFile()));
             this.declaredDependencies.addAll(model.getDependencies());
 //            this.declaredDependencies.forEach(dependency -> System.out.println(dependency));
         } catch (XmlPullParserException xmlPullParserException) {
@@ -63,9 +64,8 @@ public class BuildFile extends File {
     }
 
     private void determineDeclaredDependenciesGradle(){
-
-
-
+        GradleReader gradleReader = new GradleReader(this);
+        this.declaredDependencies.addAll(gradleReader.getDependencies());
     }
 
     public ArrayList<Dependency> getImportedDependencies() {

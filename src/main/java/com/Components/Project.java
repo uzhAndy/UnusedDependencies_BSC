@@ -13,7 +13,7 @@ import java.util.Set;
 public class Project {
 
     private final String src_path;
-    private File dir;
+    private final String projectType;
     private BuildFile buildFile;
     private boolean isRoot = false;
     private boolean isChildModule = false;
@@ -29,17 +29,18 @@ public class Project {
      * scans directory and assigns .java files to a list of ProjectFiles pom.xml files are added to a list of BuildFiles, also the determines whether each declared import is used
      * @param src_path source path of the project
      */
-    public Project(String src_path){
+    public Project(String src_path, String projectType){
         this.src_path = src_path;
         this.isRoot = true;
+        this.projectType = projectType;
         this.initializeProject();
     }
 
-    public Project(String src_path, Project parentModule){
+    public Project(String src_path, Project parentModule, String projectType){
 
         this.src_path = src_path;
         this.parentModule = parentModule;
-
+        this.projectType = projectType;
         this.initializeProject();
 
     }
@@ -92,7 +93,7 @@ public class Project {
     public ArrayList<Dependency> getDeclaredDependencies(){
         Set<Dependency> uniqueDependencies = new HashSet<>();
 
-        uniqueDependencies.addAll(new HashSet<>(this.buildFile.getDeclaredDependencies()));
+        uniqueDependencies.addAll(new HashSet<Dependency>(this.buildFile.getDeclaredDependencies()));
 
         return new ArrayList<>(uniqueDependencies);
     }
@@ -134,16 +135,16 @@ public class Project {
 
     private void initializeProject(){
 
-        this.dir = new File(this.src_path);
+        File dir = new File(this.src_path);
 
-        this.determineProjectStructure(this.dir.listFiles());
+        this.determineProjectStructure(dir.listFiles());
 
         for(File itm : this.filePaths){
             if (itm.getAbsolutePath().endsWith(".java")
                     && !itm.getAbsolutePath().contains("\\.")
                     && !itm.getAbsolutePath().contains("module-info.java")) {
                 this.projectFiles.add(ProjectFile.initializeProjectFile(itm));
-            } else if (itm.getAbsolutePath().contains("pom.xml")){
+            } else if (itm.getAbsolutePath().contains(projectType)){
 //                System.out.println("processing build file: " + itm.getAbsolutePath());
                 this.buildFile = BuildFile.initializeBuildFile(itm);
             }
@@ -187,7 +188,7 @@ public class Project {
 
             if (file.isDirectory()) {
                 if(this.isSubmodule(file)){
-                    Project subModule = new Project(file.getAbsolutePath(), this);
+                    Project subModule = new Project(file.getAbsolutePath(), this, projectType);
                     subModule.isChildModule = true;
                     this.subModules.add(subModule);
                     this.isParentModule = true;
@@ -195,7 +196,7 @@ public class Project {
                 }else{
                     this.determineProjectStructure(file.listFiles());
                 }
-            } else if (file.getAbsolutePath().contains(".java") || file.getAbsolutePath().contains("pom.xml")){
+            } else if (file.getAbsolutePath().contains(".java") || file.getAbsolutePath().contains(projectType)){
                 this.filePaths.add(file.getAbsoluteFile());
             }
         }
@@ -206,10 +207,7 @@ public class Project {
         File[] toAnalyse = file.listFiles();
 
         for(File subFile : toAnalyse){
-//            if(subFile.isDirectory()){
-//                return this.isSubmodule(subFile);
-//            }
-            if (subFile.getAbsolutePath().contains("pom.xml")){
+            if (subFile.getAbsolutePath().contains(projectType)){
                 return true;
             }
         }

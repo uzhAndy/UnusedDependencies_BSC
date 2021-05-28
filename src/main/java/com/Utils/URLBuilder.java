@@ -8,9 +8,9 @@ public class URLBuilder {
     private final String URLSuffix = "&rows=100&wt=json";
     private URL requestURL;
 
-    public URLBuilder(String importedClass) throws MalformedURLException {
+    public URLBuilder(String query) throws MalformedURLException {
 
-        this.requestURL = new URL(URLBase.concat(importedClass).concat(URLSuffix));
+        this.requestURL = new URL(URLBase.concat(query).concat(URLSuffix));
     }
 
     public URL getRequestURL() {
