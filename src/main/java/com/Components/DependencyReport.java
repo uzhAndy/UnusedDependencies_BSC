@@ -1,7 +1,5 @@
 package com.Components;
 
-import org.apache.maven.model.Dependency;
-
 import java.util.ArrayList;
 
 public class DependencyReport {
@@ -24,8 +22,9 @@ public class DependencyReport {
 
             StringBuilder candidateDependency = new StringBuilder()
                                                         .append(dependency.getBuildFile().toString()).append(";")
-                                                        .append(dependency.toString()).append(";")
-                                                        .append(DependencyType.USED.toString())
+                                                        .append(dependency).append(";")
+                                                        .append(DependencyType.USED).append(";")
+                                                        .append(dependency.getNumberOfImportedClasses())
                                                         .append("\n");
 
             if(!this.reportString.toString().contains(candidateDependency.toString()))
@@ -42,14 +41,14 @@ public class DependencyReport {
 
             StringBuilder candidateDependency = new StringBuilder()
                                                         .append(dependency.getBuildFile().toString()).append(";")
-                                                        .append(dependency.toString()).append(";")
-                                                        .append(DependencyType.USED.toString())
+                                                        .append(dependency).append(";")
+                                                        .append(DependencyType.USED)
                                                         .append("\n");
 
             if(!this.reportString.toString().contains(candidateDependency))
             this.reportString.append(dependency.getBuildFile().toString()).append(";")
-                    .append(dependency.toString()).append(";")
-                    .append(DependencyType.UNUSED.toString())
+                    .append(dependency).append(";")
+                    .append(DependencyType.UNUSED)
                     .append("\n");
         }
     }

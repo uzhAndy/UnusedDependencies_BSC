@@ -12,7 +12,10 @@ public class BuildFile extends File {
 
     private ArrayList<Dependency> declaredDependencies = new ArrayList();
     private ArrayList<Dependency> importedDependencies = new ArrayList<>();
+    private ArrayList<String> declaredModules = new ArrayList<>();
     private static String BUILD_FILE_TYPE = "MAVEN";
+    private String groupId;
+    private String artifactId;
 
 
     /***The BuildFile class extends the regular file class to have additional functionalities which are relevant to the
@@ -44,6 +47,18 @@ public class BuildFile extends File {
         return declaredDependencies;
     }
 
+    public ArrayList<String> getDeclaredModules() {
+        return declaredModules;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public String getArtifactId() {
+        return artifactId;
+    }
+
     /***
      * retrieving a list of dependencies declared in the buildFile (currently only maven) and storing
      * the dependencies to the list of declared dependencies
@@ -52,12 +67,19 @@ public class BuildFile extends File {
         try{
             MavenXpp3Reader reader = new MavenXpp3Reader();
             Model model = reader.read(new FileReader(this.getAbsoluteFile()));
+
+            this.groupId = model.getGroupId();
+            this.artifactId = model.getArtifactId();
             this.declaredDependencies.addAll(model.getDependencies());
+
+            ArrayList<String> modules = (ArrayList<String>) model.getModules();
+
+            modules.forEach(mdl-> this.declaredModules.add(mdl));
+//            this.declaredModules.addAll(modules);
 //            this.declaredDependencies.forEach(dependency -> System.out.println(dependency));
-        } catch (XmlPullParserException xmlPullParserException) {
+        } catch (XmlPullParserException | FileNotFoundException xmlPullParserException) {
+            System.out.println(this.getAbsolutePath());
             xmlPullParserException.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }

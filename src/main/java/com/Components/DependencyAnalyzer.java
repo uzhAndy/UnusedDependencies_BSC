@@ -7,6 +7,7 @@ import org.apache.maven.model.Dependency;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.*;
 
 import org.json.simple.JSONArray;
@@ -17,8 +18,12 @@ public class DependencyAnalyzer {
     private ArrayList<DependencyExtended> usedDependencies = new ArrayList<>();
     private ArrayList<DependencyExtended> unusedDependencies = new ArrayList<>();
     private ArrayList<String> notDeterminedImports = new ArrayList<>();
-    private DependencyReport dependencyReport = new DependencyReport("C:/Users/LenovoThinkPadT450s/Desktop/maven-surefire-master/");
-    private Logger log = new Logger();
+    private ArrayList<String> importStatementsToIgnore = new ArrayList<>(); // imports that import a module from the project can be ignored
+    private DependencyReport dependencyReport = new DependencyReport("C:\\Users\\LenovoThinkPadT450s\\OneDrive - Universität Zürich UZH\\Studium\\Bachelor Thesis\\Repository mining\\SourceCodeAnalyzer");
+    private Logger log= new Logger();
+    private String baseModule;
+    private ArrayList<String> cachedImports = new ArrayList<>();
+    private int declaredDependencyCount;
 
     /***Class to analyze the dependency usage of a given project. It mainly checks which dependency a used and imported
      * class is from and adds said dependency to a list of used dependencies. To obtain the list of unused dependencies,
@@ -33,10 +38,18 @@ public class DependencyAnalyzer {
      */
     public void determineDependenciesUsage(Project project){
 
-        project.getSubModules().forEach(proj -> this.determineDependenciesUsage(proj));
+        this.baseModule = project.getSrcPath();
 
-//        System.out.println("Project: " + project.getSrcPath());
+
+        project.getSubModules().forEach(proj -> {
+            this.determineDependenciesUsage(proj);
+            this.determineDependenciesOfModule(proj);
+        });
+
         this.determineDependenciesOfModule(project);
+
+        this.dependencyReport.addUsedDependencies(usedDependencies);
+        this.dependencyReport.addUnusedDependencies(unusedDependencies);
 
     }
 
@@ -51,19 +64,85 @@ public class DependencyAnalyzer {
 
         FileWriter fw = new FileWriter(fPath, true);
 
+
         fw.write(this.dependencyReport.getReport());
         fw.close();
+        this.usedDependencies.clear();
+        this.unusedDependencies.clear();
     }
 
+    /***
+     *
+     * @param project
+     * @return
+     */
+
+    private ArrayList<String> getModuleImportStatements(Project project){
+
+        ArrayList<String> modules = new ArrayList<>();
+
+        for(ImportDeclaration importDeclaration : project.getUsedImports()){
+            if(importDeclaration.getNameAsString().contains(project.getRoot().getBuildFile().getGroupId())){
+                modules.add(importDeclaration.getNameAsString());
+            }
+        }
+        return modules;
+    }
+
+    /***
+     *
+     * @param project
+     */
+
+    private void whiteListModules(Project project){
+        for(Dependency dependency : project.getDeclaredDependencies()){
+
+            for(String module : project.getDeclaredModules()){
+                if(module.equals(dependency.getArtifactId())){
+                    this.usedDependencies.add(new DependencyExtended(project.getBuildFile(), dependency));
+                }
+            }
+        }
+    }
+
+    /***
+     *
+     * @param declaredDependencies
+     * @return
+     */
+
+    private ArrayList<DependencyExtended>  removeDeclaredModules(ArrayList<DependencyExtended> declaredDependencies){
+
+        ArrayList<DependencyExtended> retDeclaredDependencies = new ArrayList<>(declaredDependencies);
+
+        for(DependencyExtended dependency : declaredDependencies){
+            for(DependencyExtended usedDependency : this.usedDependencies){
+                if(dependency.equals(usedDependency)){
+                    retDeclaredDependencies.remove(dependency);
+                }
+            }
+        }
+
+        return retDeclaredDependencies;
+    }
+
+    /***
+     *
+     * @param project
+     */
     private void determineDependenciesOfModule(Project project){
 
+        this.declaredDependencyCount += project.getBuildFile().getDeclaredDependencies().size();
 
-        ArrayList<DependencyExtended> usedDependenciesThisIteration  = this.determineUsedDependencies(project);
-        ArrayList<DependencyExtended> unusedDependenciesThisIteration = this.determineUnusedDependencies(project, usedDependencies);
+        ArrayList<DependencyExtended> declaredDependencies = DependencyExtended.convertDependenciesToDependenciesExtended(project.getBuildFile());
 
-        ArrayList<DependencyExtended> cleanUpUsedDependencies = this.cleanUpUnusedDependencies(unusedDependenciesThisIteration);
+        this.importStatementsToIgnore = this.getModuleImportStatements(project);
+        this.whiteListModules(project);
 
-        this.usedDependencies.addAll(usedDependenciesThisIteration);
+        declaredDependencies = this.removeDeclaredModules(declaredDependencies);
+
+        ArrayList<DependencyExtended> cleanUpUsedDependencies = this.cleanUpUnusedDependencies(project, declaredDependencies);
+
         try{
             for (DependencyExtended dependency : cleanUpUsedDependencies){
                 if(!this.usedDependencies.contains(dependency)){
@@ -73,23 +152,48 @@ public class DependencyAnalyzer {
         } catch (NullPointerException e){
         }
 
-        this.dependencyReport.addUsedDependencies(usedDependencies);
-        this.dependencyReport.addUnusedDependencies(unusedDependencies);
+        ArrayList<DependencyExtended> unusedDependenciesThisModule = determineUnusedDependencies(project, cleanUpUsedDependencies);
+        unusedDependenciesThisModule.forEach(dp -> {
+            if (!this.unusedDependencies.contains(dp)) {
+                this.unusedDependencies.add(dp);
+            }
+        });
 
-        this.notDeterminedImports.clear();
+        try {
+            this.log.addLogDependencyUsage(cleanUpUsedDependencies, DependencyExtended.DependencyType.USED, project, project.isRoot());
+            this.log.addLogDependencyUsage(unusedDependenciesThisModule, DependencyExtended.DependencyType.UNUSED, project, project.isRoot());
+        } catch (IOException e){
+        }
+
     }
 
-    private ArrayList<DependencyExtended> cleanUpUnusedDependencies(ArrayList<DependencyExtended> unusedDependencies){
+    /***
+     *
+     * @param project
+     * @param declaredDependencies
+     * @return
+     */
+
+    private ArrayList<DependencyExtended> cleanUpUnusedDependencies(Project project, ArrayList<DependencyExtended> declaredDependencies){
 
         ArrayList<DependencyExtended> actuallyUsedDependencies = new ArrayList<>();
 
+        for(ImportDeclaration notDeterminedImport: project.getUsedImports()){
+            if(!notDeterminedImport.getNameAsString().startsWith("java.") &&
+                    !this.importStatementsToIgnore.contains(notDeterminedImport.getNameAsString()))
 
 
-        for(String notDeterminedImport: this.notDeterminedImports){
             try {
-                DependencyExtended foundDependency = this.searchForFCAndGroupId(notDeterminedImport, unusedDependencies);
+                DependencyExtended foundDependency = this.searchForFCAndGroupId(project,
+                                                                        notDeterminedImport.getNameAsString(),
+                                                                        declaredDependencies
+                                                        );
                 if(!actuallyUsedDependencies.contains(foundDependency) & foundDependency != null){
+                    foundDependency.addFileUsage(notDeterminedImport.getNameAsString());
                     actuallyUsedDependencies.add(foundDependency);
+                } else if (actuallyUsedDependencies.contains(foundDependency)){
+                    DependencyExtended temp = actuallyUsedDependencies.get(actuallyUsedDependencies.indexOf(foundDependency));
+                    temp.addFileUsage(notDeterminedImport.getNameAsString());
                 }
             }catch (NullPointerException e){
             }
@@ -113,6 +217,7 @@ public class DependencyAnalyzer {
             }
         }
         return unusedDependencies;
+
     }
 
     /***
@@ -120,14 +225,21 @@ public class DependencyAnalyzer {
      */
     private ArrayList<DependencyExtended> determineUsedDependencies(Project project){
 
-//        System.out.println("determineUsedDependencies " + project.getSrcPath());
-
         ArrayList<DependencyExtended> usedDependencies = new ArrayList<>();
 
         try{
+            System.out.println("Number of imports: " + project.getUsedImports().size());
+
             for(ImportDeclaration importDeclaration : project.getUsedImports()){
-//                System.out.println(importDeclaration.getNameAsString());
-                if(!importDeclaration.getNameAsString().startsWith("java.")){
+
+                System.out.print("Looking for: " + importDeclaration.getNameAsString() + "\t" +
+                        "is module:" + this.importIsModule(project.getDeclaredModules(), importDeclaration.getNameAsString()) +
+                         "\n"
+                );
+
+                if(!(importDeclaration.getNameAsString().startsWith("java.") ||
+                        this.importIsModule(project.getDeclaredModules(), importDeclaration.getNameAsString()) ||
+                        this.notDeterminedImports.contains(importDeclaration.getNameAsString()))){
 
                     DependencyExtended dependencyOfClass;
 
@@ -144,15 +256,19 @@ public class DependencyAnalyzer {
                                                                             importDeclaration.getNameAsString()
                         );
                     }
+
                     if(dependencyOfClass.getGroupId() == null && !this.notDeterminedImports.contains(importDeclaration.getNameAsString())) {
                         this.notDeterminedImports.add(importDeclaration.getNameAsString());
                     }
-                    log.addLog("determineUsedDependencies", parentProj.getSrcPath() + " -- " + importDeclaration.getNameAsString(), dependencyOfClass.toString());
+                    log.addLogClassAndItsDependency("determineUsedDependencies", parentProj.getSrcPath() + " -- " + importDeclaration.getNameAsString(), dependencyOfClass.toString());
+
                     try{
                         if(!usedDependencies.contains(dependencyOfClass) && dependencyOfClass.getGroupId() != null){
                             StringBuilder tempRep = new StringBuilder().append("buildFile: " + dependencyOfClass.getBuildFile().getAbsolutePath()).append("\tstored dependencies: ");
                             usedDependencies.forEach(dep -> tempRep.append(dep).append(";"));
                             usedDependencies.add(dependencyOfClass);
+                        } else if(usedDependencies.contains(dependencyOfClass)){
+                            dependencyOfClass.addFileUsage(project.getSrcPath());
                         }
                     } catch (NullPointerException e){
                     }
@@ -177,63 +293,136 @@ public class DependencyAnalyzer {
         RequestBuilder requestBuilder = new RequestBuilder();
         requestBuilder.setImportedClass(importedClass);
         requestBuilder.createConnection();
-        JSONArray jsonDependencies = requestBuilder.getDependenciesOfClass();
+        try{
+            JSONArray jsonDependencies = requestBuilder.getDependenciesOfClass();
 
-        ArrayList<DependencyCandidate> dependencyCandidates = DependencyCandidate.convertJSONToDependencyCandidates(jsonDependencies);
+            ArrayList<DependencyCandidate> dependencyCandidates = DependencyCandidate.convertJSONToDependencyCandidates(jsonDependencies);
 
-        DependencyExtended classDependency = new DependencyExtended();
+            DependencyExtended classDependency = new DependencyExtended();
 
-        ArrayList<Dependency> dependenciesToCompareWith = project.getDeclaredDependencies();
+            ArrayList<Dependency> dependenciesToCompareWith = project.getDeclaredDependencies();
 
-        for (Dependency dependency : dependenciesToCompareWith) {
+            for (Dependency dependency : dependenciesToCompareWith) {
 
-            if (dependencyCandidates.contains(new DependencyCandidate(dependency))) {
-                return new DependencyExtended(project.getBuildFile(), dependency);
+                if (dependencyCandidates.contains(new DependencyCandidate(dependency))) {
+                    return new DependencyExtended(project.getBuildFile(), dependency, project.getSrcPath());
+                }
             }
-        }
 
-        // issue when a method of a class is imported. When removing the method (omitting the last part of the import
-        // string (f.i. "org.junit.Assert.assertThat" --> "org.junit.Assert")
-        if (importedClass.split("\\.").length > 2) {
-            String[] importedClassSplit = importedClass.split("\\.");
-            String higherOrderImport = String.join(".", Arrays.copyOfRange(importedClassSplit, 0, importedClassSplit.length - 1));
-            return this.determineDependencyOfClass(project, higherOrderImport);
+            // issue when a method of a class is imported. When removing the method (omitting the last part of the import
+            // string (f.i. "org.junit.Assert.assertThat" --> "org.junit.Assert")
+            if (importedClass.split("\\.").length > 2) {
+                String[] importedClassSplit = importedClass.split("\\.");
+                String higherOrderImport = String.join(".", Arrays.copyOfRange(importedClassSplit, 0, importedClassSplit.length - 1));
+                return this.determineDependencyOfClass(project, higherOrderImport);
 
+            }
+            return classDependency;
+        } catch (ConnectException | NullPointerException e){
+         return new DependencyExtended();
         }
-        return classDependency;
     }
 
-    private DependencyExtended searchForFCAndGroupId(String importedClass, ArrayList<DependencyExtended> unusedDependencies){
+    /***
+     *
+     * @param project
+     * @param importedClass
+     * @param unusedDependencies
+     * @return
+     */
+    private DependencyExtended searchForFCAndGroupId(Project project, String importedClass, ArrayList<DependencyExtended> unusedDependencies){
+
+        if(this.isMethod(importedClass)){
+            importedClass = this.removeMethod(importedClass);
+        }
 
         RequestBuilder request = new RequestBuilder();
 
         for(DependencyExtended dependency: unusedDependencies) {
-            request.setImportedClass(importedClass + "%20AND%20g:" + dependency.getGroupId());
+            request.setImportedClassGroupIdArtifactId(importedClass, dependency.getGroupId(), dependency.getArtifactId());
             request.createConnection();
             try {
                 JSONArray jsonDependencies = request.getDependenciesOfClass();
                 if (jsonDependencies.size() > 0) {
-                    log.addLog("searchForFCAndGroupId",  " -- " + importedClass, dependency.toString());
+                    log.addLogClassAndItsDependency("searchForFCAndGroupId",  " -- " + importedClass, dependency.toString());
+                    this.cachedImports.add(importedClass);
                     return dependency;
                 }
             } catch (IOException | ParseException e) {
             }
         }
 
-        if (importedClass.split("\\.").length > 2) {
+//        if (this.isOriginalImport(importedClass, project.getUsedImports())) {
+//
+//            String[] importedClassSplit = importedClass.split("\\.");
+//
+//            String higherOrderImport = String.join(".",
+//                                                Arrays.copyOfRange(importedClassSplit,
+//                                                0,
+//                                                importedClassSplit.length - 1)
+//            );
+//            if(!this.cachedImports.contains(higherOrderImport)){
+//                return this.searchForFCAndGroupId(project, higherOrderImport, unusedDependencies);
+//            }
+//        }
 
-            String[] importedClassSplit = importedClass.split("\\.");
-
-            String higherOrderImport = String.join(".",
-                                                Arrays.copyOfRange(importedClassSplit,
-                                                0,
-                                                importedClassSplit.length - 1)
+        if(project.isChildModule()){
+            return this.searchForFCAndGroupId(project.getParent(),
+                    importedClass,
+                    DependencyExtended.convertDependenciesToDependenciesExtended(
+                            project.getParent().getBuildFile()
+                    )
             );
-            return this.searchForFCAndGroupId(higherOrderImport, unusedDependencies);
-
+        } else {
+            return null;
         }
+    }
 
-        return null;
+
+    /***
+     *
+     * @param declaredModules
+     * @param declaredImport
+     * @return
+     */
+    private boolean importIsModule(ArrayList<String> declaredModules, String declaredImport){
+
+        for(String declaredModule : declaredModules){
+            if(declaredImport.contains(declaredModule)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isMethod(String importedClass){
+        String[] importedClassSplit = importedClass.split("\\.");
+        if(Character.isUpperCase(importedClassSplit[0].charAt(0))){
+            return true;
+        }
+        return false;
+    }
+
+    private String removeMethod(String importedClass){
+        String[] importedClassSplit = importedClass.split("\\.");
+        return String.join(".",
+                Arrays.copyOfRange(importedClassSplit,
+                        0,
+                        importedClassSplit.length - 1)
+        );
+    }
+
+    private boolean isOriginalImport(String importedClass, ArrayList<ImportDeclaration> usedImports) throws IndexOutOfBoundsException{
+        for(ImportDeclaration importDeclaration: usedImports){
+            if(importDeclaration.getNameAsString().contains(importedClass)){
+                if(importDeclaration.getNameAsString().equals(importedClass)){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 }

@@ -7,12 +7,15 @@ import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.Scanner;
 
 public class RequestBuilder {
 
     private String importedClass;
+    private String groupId;
+    private String artifactId;
     private HttpURLConnection connection;
     private URL requestURL;
     private URLBuilder urlBuilder;
@@ -24,14 +27,20 @@ public class RequestBuilder {
         this.importedClass = importedClass;
     }
 
+    public void setImportedClassGroupIdArtifactId(String importedClass, String groupId, String artifactId){
+        this.importedClass = "fc:" + importedClass;
+        this.groupId = "g:" + groupId;
+        this.artifactId = "a:" + artifactId;
+    }
+
     public void createConnection() {
         try{
-            this.urlBuilder = new URLBuilder(this.importedClass);
+            this.urlBuilder = new URLBuilder(this.importedClass + "%20AND%20" + this.groupId + "%20AND%20" + this.artifactId);
             this.requestURL = urlBuilder.getRequestURL();
             this.connection = (HttpURLConnection) this.requestURL.openConnection();
             this.connection.setRequestMethod("GET");
-            this.connection.setConnectTimeout(5000);
-            this.connection.setReadTimeout(60*1000);
+            this.connection.setConnectTimeout(1000);
+            this.connection.setReadTimeout(5000);
         } catch (Exception e){
             System.out.println(this.importedClass);
             e.printStackTrace();
@@ -42,35 +51,39 @@ public class RequestBuilder {
 
         long timestamp = System.currentTimeMillis();
         this.connection.connect();
+        try{
+            int responseCode = connection.getResponseCode();
+            if (responseCode != 200) {
+                return null;
+            } else {
 
-        int responseCode = connection.getResponseCode();
+                String inline = "";
+                try{
+                    Scanner scanner = new Scanner(this.requestURL.openStream());
+                    while (scanner.hasNext()) {
+                        inline += scanner.nextLine();
+                    }
 
-        if (responseCode != 200) {
-            return null;
-        } else {
-
-            String inline = "";
-            try{
-                Scanner scanner = new Scanner(this.requestURL.openStream());
-                while (scanner.hasNext()) {
-                    inline += scanner.nextLine();
+                    scanner.close();
+                } catch (Exception e){
+                    System.out.println("Could not request for: " + this.importedClass + "connection timeout");
+                    e.printStackTrace();
+                    return new JSONArray();
                 }
 
-                scanner.close();
-            } catch (Exception e){
-                System.out.println("Could not " + this.importedClass + "connection timeout");
-                e.printStackTrace();
-            }
 
-
-            JSONParser jsonParser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) jsonParser.parse(inline);
-            JSONObject response = (JSONObject) jsonObject.get("response");
+                JSONParser jsonParser = new JSONParser();
+                JSONObject jsonObject = (JSONObject) jsonParser.parse(inline);
+                JSONObject response = (JSONObject) jsonObject.get("response");
 
 
 //            System.out.println("Time to process request: " + (System.currentTimeMillis() - timestamp)/1000);
-            return (JSONArray) response.get("docs");
+                return (JSONArray) response.get("docs");
 
+            }
+        } catch (SocketTimeoutException e){
+            return new JSONArray();
         }
+
     }
 }

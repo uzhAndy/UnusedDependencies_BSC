@@ -4,7 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class URLBuilder {
-    private final String URLBase = "https://search.maven.org/solrsearch/select?q=fc:";
+    private final String URLBase = "https://search.maven.org/solrsearch/select?q=";
     private final String URLSuffix = "&rows=100&wt=json";
     private URL requestURL;
 

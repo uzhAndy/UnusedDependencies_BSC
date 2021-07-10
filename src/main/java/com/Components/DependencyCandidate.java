@@ -11,7 +11,7 @@ public class DependencyCandidate {
     private String artifactId;
     private String groupId;
 
-    private DependencyCandidate(String groupId, String artifactId){
+    public DependencyCandidate(String groupId, String artifactId){
         this.groupId = groupId;
         this.artifactId = artifactId;
     }
@@ -23,10 +23,7 @@ public class DependencyCandidate {
 
     public static ArrayList<DependencyCandidate> convertJSONToDependencyCandidates(JSONArray dependencies){
 
-//        System.out.println("Initializing ArrayList<DependencyCandidates> having: " + dependencies.size() + " candidates.");
-
         ArrayList<DependencyCandidate> dependencyCandidates = new ArrayList<>();
-        long timestamp = System.currentTimeMillis();
         int i = 0;
 
         while(i<dependencies.size()){
@@ -39,9 +36,6 @@ public class DependencyCandidate {
             }
             i++;
         }
-
-//        System.out.println("Conversion time in ms: " + (System.currentTimeMillis()-timestamp));
-
 
         return dependencyCandidates;
     }

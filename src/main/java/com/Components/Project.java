@@ -1,6 +1,7 @@
 package com.Components;
 
 import com.Utils.BuildFile;
+import com.Utils.Logger;
 import com.Utils.ProjectFile;
 import com.github.javaparser.ast.ImportDeclaration;
 import org.apache.maven.model.Dependency;
@@ -23,6 +24,7 @@ public class Project {
     private ArrayList<ImportDeclaration> uniqueImports = new ArrayList<>();
     private ArrayList<Project> subModules = new ArrayList<>();
     private ArrayList<File> filePaths = new ArrayList<>();
+    private Logger log = new Logger();
 
     /***
      * Constructor of Project
@@ -43,6 +45,10 @@ public class Project {
         this.projectType = projectType;
         this.initializeProject();
 
+    }
+
+    public String getProjectType() {
+        return projectType;
     }
 
     public String getSrcPath() {
@@ -98,6 +104,12 @@ public class Project {
         return new ArrayList<>(uniqueDependencies);
     }
 
+    public ArrayList<String> getDeclaredModules(){
+
+        return this.getAllDeclaredModules(this);
+
+    }
+
     public Project getSibling(){
 
         int index = this.getIndexOfSibling();
@@ -133,6 +145,14 @@ public class Project {
         return this.parentModule;
     }
 
+    public Project getRoot(){
+        if(this.isRoot){
+            return this;
+        } else {
+            return this.getParent().getRoot();
+        }
+    }
+
     private void initializeProject(){
 
         File dir = new File(this.src_path);
@@ -151,6 +171,13 @@ public class Project {
         }
 
         this.determineUsedImports();
+        try {
+            this.log.addLogImportDeclarations(this, this.isRoot);
+            this.log.addLogDeclaredDependencies(this, this.isRoot);
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     private int getIndexOfSibling(){
@@ -200,6 +227,13 @@ public class Project {
                 this.filePaths.add(file.getAbsoluteFile());
             }
         }
+    }
+
+    public ArrayList<String> getAllDeclaredModules(Project project){
+        while(project.isChildModule){
+            return getAllDeclaredModules(project.getParent());
+        }
+        return project.getBuildFile().getDeclaredModules();
     }
 
     private boolean isSubmodule(File file){
