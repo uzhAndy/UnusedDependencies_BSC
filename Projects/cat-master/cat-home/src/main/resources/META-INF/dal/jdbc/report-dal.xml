@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities do-package="com.dianping.cat.home.dal.report" gen="true">
+	<entity name="alert-summary" table="alert_summary" alias="as">
+		<member name="creation-date" insert-expr="NOW()" />
+	</entity>
+	<entity name="alteration" table="alteration" alias="a">
+		<member name="creation-date" insert-expr="NOW()" />
+		<var name="start-time" value-type="Date" />
+		<var name="end-time" value-type="Date" />
+		<var name="types" value-type="String[]" />
+		<param name="type" />
+		<param name="domain" />
+		<param name="hostname" />
+		<query-defs>
+			<query name="find-by-type-druation" type="SELECT" multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="type" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='date'/> >= ${start-time}
+					AND <FIELD name='date'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='type'>
+						AND <FIELD name='type'/> = ${type} 
+					</IF>
+					ORDER BY <FIELD name='date'/> desc		
+					]]></statement>
+			</query>
+			<query name="find-by-dtdh" type="SELECT" multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="type" />
+				<param name="domain" />
+				<param name="hostname" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='date'/> >= ${start-time}
+					AND <FIELD name='date'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='type'>
+						AND <FIELD name='type'/> = ${type} 
+					</IF>
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					<IF type='NOT_NULL' field='hostname'>
+						AND <FIELD name='hostname'/> = ${hostname} 
+					</IF>
+					ORDER BY <FIELD name='date'/> desc		
+					]]></statement>
+			</query>
+			<query name="find-by-dtdh-types" type="SELECT"	multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="type" />
+				<param name="domain" />
+				<param name="hostname" />
+				<param name="types" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='date'/> >= ${start-time}
+					AND <FIELD name='date'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='type'>
+						AND <FIELD name='type'/> = ${type} 
+					</IF>
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					<IF type='NOT_NULL' field='hostname'>
+						AND <FIELD name='hostname'/> = ${hostname} 
+					</IF>
+					AND <FIELD name='type'/> in <IN>${types}</IN>
+					ORDER BY <FIELD name='date'/> desc	
+					]]></statement>
+			</query>
+			<query name="find-by-domain-and-time" type="SELECT" multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="domain" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='date'/> >= ${start-time}
+					AND <FIELD name='date'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					ORDER BY <FIELD name='date'/> desc		
+					]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="topology-graph" table="topologyGraph" alias="t">
+		<member name="creation-date" insert-expr="NOW()" />
+		<query-defs>
+			<query name="find-by-period" type="SELECT">
+				<param name="period" />
+				<statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period}]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="baseline" table="baseline" alias="b">
+		<member name="creation-date" insert-expr="NOW()" />
+		<var name="dataInDoubleArray" value-type="double[]" />
+		<query-defs>
+			<query name="find-by-report-name-key-time" type="SELECT">
+				<param name="report-period" />
+				<param name="report-name" />
+				<param name="index-key" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='report-period'/> = ${report-period}
+					AND <FIELD name='report-name'/> = ${report-name}
+					AND <FIELD name='index-key'/> = ${index-key} 
+					]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="metric-graph" table="metric_graph" alias="mg">
+		<var name="number" value-type="int" />
+		<member name="creation-date" insert-expr="NOW()" />
+		<member name="updatetime" insert-expr="NOW()" update-expr="NOW()" />
+		<query-defs>
+			<query name="find-by-grap-id" type="SELECT" >
+				<param name="graph-id"/>
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='graph-id'/> = ${graph-id}
+					]]></statement>
+			</query>
+			<query name="find-last" type="SELECT" >
+				<param name="number"/>
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					ORDER BY <FIELD name='creation-date'/> DESC LIMIT ${number} 
+					]]></statement>
+			</query>
+			<query name="delete-before-date" type="DELETE" >
+				<param name="creation-date"/>
+				<statement><![CDATA[DELETE FROM <TABLE/>
+        			WHERE <FIELD name='creation-date'/> < ${creation-date}]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="metric-screen" table="metric_screen" alias="ms">
+		<member name="creation-date" insert-expr="NOW()" />
+		<member name="updatetime" insert-expr="NOW()" update-expr="NOW()" />
+		<readsets>
+			<readset name="content">
+				<member name="content" />
+			</readset>
+			<readset name="metaInfo">
+				<member name="id" />
+				<member name="name" />
+				<member name="graph-name" />
+			</readset>
+		 </readsets>
+		<query-defs>
+			<query name="find-all" type="SELECT" multiple="true">
+				<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				]]></statement>
+			</query>
+			<query name="find-by-name-graph" type="SELECT" >
+				<param name="name"/>
+				<param name="graph-name"/>
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='name'/> = ${name}
+					AND <FIELD name='graph-name'/> = ${graph-name} 
+					]]></statement>
+			</query>
+			<query name="find-by-name" type="SELECT" multiple="true">
+				<param name="name"/>
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='name'/> = ${name}
+					]]></statement>
+			</query>
+			<query name="insert-or-update-by-name-graph" type="INSERT">
+	        	<statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+			        VALUES(<VALUES/>) ON DUPLICATE KEY UPDATE 
+			        <FIELD name='view'/> = ${view},
+			        <FIELD name='end-points'/> = ${end-points},
+			        <FIELD name='measurements'/> = ${measurements},
+			        <FIELD name='content'/> = ${content}
+			         ]]></statement>
+	      	</query>
+			<query name="delete-by-name" type="DELETE">
+				<param name="name"/>
+				<statement><![CDATA[DELETE FROM <TABLE/>
+        			WHERE <FIELD name='name'/> = ${name}]]></statement>
+			</query>
+			<query name="delete-by-name-graph" type="DELETE">
+				<param name="name"/>
+				<param name="graph-name"/>
+				<statement><![CDATA[DELETE FROM <TABLE/>
+        			WHERE <FIELD name='name'/> = ${name}
+        			AND <FIELD name='graph-name'/> = ${graph-name}]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+    <entity name="overload" table="overload" alias="ot">
+   		<var name="start-time" value-type="Date" />
+		<var name="end-time" value-type="Date" />
+		<var name="type" value-type="int" />
+    	<member name="creation-date" insert-expr="NOW()" />
+   		<member name="max-id" value-type="int" all="false" select-expr="max(report_id)" length="19" nullable="false" />
+   		<member name="count" value-type="int" all="false" select-expr="count(*)" length="19" nullable="false" />
+    	<readsets>
+			<readset name="maxid">
+				<member name="max-id" />
+			</readset>
+			<readset name="count-num">
+				<member name="count" />
+			</readset>
+			<readset name="id-size-type">
+				<member name="report-id" />
+				<member name="report-size" />
+				<member name="report-type" />
+			</readset>
+		 </readsets>
+	     <query-defs>
+	     	<query name="find-max-id-by-type" type="SELECT" multiple="false">
+				<param name="type" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='report-type'/> = ${type}
+					]]></statement>
+			</query>
+			<query name="find-count" type="SELECT" multiple="false">
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					]]></statement>
+			</query>
+			<query name="find-id-and-size-by-duration" type="SELECT" multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='period'/> >= ${start-time}
+					AND <FIELD name='period'/> <= ${end-time} 
+					ORDER BY <FIELD name='period'/> DESC, <FIELD name='report-type'/> ASC
+					]]></statement>
+			</query>
+	     </query-defs>
+    </entity>
+    <entity name="config-modification" table="config_modification" alias="cm">
+    	<member name="creation-date" insert-expr="NOW()" />
+    </entity>
+</entities>

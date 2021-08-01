@@ -1,0 +1,19 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'org.jsonschema2pojo:jsonschema2pojo-gradle-plugin:latest.integration'
+    }
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+        google()
+        mavenCentral()
+    }
+}

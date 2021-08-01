@@ -38,7 +38,9 @@ public class ProjectFile extends File {
             this.convertSetOfFullIndentToArrayListOfImportDeclaration();
 //            this.usedImports.forEach(imp -> System.out.println(imp));
         } catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            System.out.println("Exception while building parsing project file");
+
         }
     }
 
@@ -51,7 +53,8 @@ public class ProjectFile extends File {
         try{
             return new ProjectFile(file.getAbsolutePath());
         } catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            System.out.println("Error while initializing project file");
             return null;
         }
     }

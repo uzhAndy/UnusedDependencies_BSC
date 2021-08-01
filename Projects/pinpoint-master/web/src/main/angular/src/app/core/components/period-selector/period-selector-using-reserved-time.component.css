@@ -1,0 +1,29 @@
+.l-time-set {
+    display: flex;
+    flex-flow: row wrap;
+    height: 100%;
+}
+.l-time-set li {
+    box-shadow: -1px 0px 0px var(--period-select-box-shadow);
+}
+.l-time-set button {
+    height: 100%;
+    font-size:12px;
+    font-weight:600;
+    color: var(--text-knockout);
+    padding:0 8px;
+    background: var(--period-select-background);
+    border-left:1px solid var(--period-select-box-border-lighter);
+    border-radius: 0px;
+    box-shadow: -1px 0px 0px var(--period-select-box-shadow);
+}
+.l-time-set button.active {
+    background: var(--secondary);
+}
+.l-time-set button:focus {
+    background-color:var(--primary-color);
+    color: var(--text-knockout);
+}
+.l-time-set button:hover, .l-time-set button:focus {
+    background: var(--secondary)
+}

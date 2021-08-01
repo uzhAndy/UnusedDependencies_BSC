@@ -1,0 +1,26 @@
+{
+  "instances": {
+    "scheduledtasks": {
+      "label": "Tâches programmées",
+      "no_scheduledtasks": "Aucune tâches présente.",
+      "cron": {
+        "expression": "Expression",
+        "runnable": "Exécutable",
+        "title": "Cron"
+      },
+      "fetch_failed": "Echec de la récupération des tâches programmées.",
+      "fixed_delay": {
+        "initial_delay_ms": "Délai initial (ms)",
+        "interval_ms": "Intervalle (ms)",
+        "runnable": "Exécutable",
+        "title": "Délai fixe"
+      },
+      "fixed_rate": {
+        "initial_delay_ms": "Délai initial (ms)",
+        "interval_ms": "Intervalle (ms)",
+        "runnable": "Exécutable",
+        "title": "Taux fixe"
+      }
+    }
+  }
+}

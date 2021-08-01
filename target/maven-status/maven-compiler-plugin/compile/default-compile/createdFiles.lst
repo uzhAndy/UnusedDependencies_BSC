@@ -1,12 +1,1 @@
-com\archive\helpers\DirExplorer$FileHandler.class
-com\archive\helpers\DirExplorer$Filter.class
-com\archive\MyClassLoader.class
-com\archive\DefaultProjectDependencyAnalyzer.class
-com\Project.class
-com\archive\DependencyExtended.class
-com\archive\helpers\DirExplorer.class
 com\Main.class
-com\archive\helpers\NodeIterator$NodeHandler.class
-com\archive\DefaultCallGraph.class
-com\DependencyAnalyzer.class
-com\archive\helpers\NodeIterator.class

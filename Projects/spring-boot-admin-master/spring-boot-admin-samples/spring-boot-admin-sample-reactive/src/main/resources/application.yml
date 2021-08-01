@@ -1,0 +1,63 @@
+---
+info:
+  scm-url: "@scm.url@"
+  build-url: "https://travis-ci.org/codecentric/spring-boot-admin"
+
+logging:
+  file:
+    name: "target/boot-admin-sample-reactive.log"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+spring:
+  application:
+    name: spring-boot-admin-sample-reactive
+  boot:
+    admin:
+      client:
+        url: http://localhost:8080
+  profiles:
+    active:
+      - insecure
+
+---
+spring:
+  profiles: dev
+  boot:
+    admin:
+      ui:
+        cache:
+          no-cache: true
+        template-location: file:../../spring-boot-admin-server-ui/target/dist/
+        resource-locations: file:../../spring-boot-admin-server-ui/target/dist/
+        cache-templates: false
+
+---
+spring:
+  profiles: insecure
+
+---
+spring:
+  profiles: secure
+  security:
+    user:
+      name: "user"
+      password: "password"
+  boot:
+    admin:
+      client:
+        username: "user"       #These two are needed so that the client
+        password: "password"   #can register at the protected server api
+        instance:
+          metadata:
+            user.name: "user"         #These two are needed so that the server
+            user.password: "password" #can access the protected client endpoints
+
+

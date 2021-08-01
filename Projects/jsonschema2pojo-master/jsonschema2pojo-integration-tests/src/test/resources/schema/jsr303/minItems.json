@@ -1,0 +1,14 @@
+{
+    "type" : "object",
+    "properties" : {
+        "minItems" : {
+            "type" : "array",
+            "minItems" : 5
+        },
+        "minItemsNotApplicable" : {
+            "type" : "string",
+            "format": "uuid",
+            "minItems" : 5
+        }
+    }
+}

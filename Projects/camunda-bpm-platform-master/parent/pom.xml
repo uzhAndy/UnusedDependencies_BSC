@@ -1,0 +1,308 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.camunda.bpm</groupId>
+    <artifactId>camunda-root</artifactId>
+    <version>7.16.0-SNAPSHOT</version>
+    <relativePath>../</relativePath>
+  </parent>
+
+  <artifactId>camunda-parent</artifactId>
+  <name>Camunda Platform - Parent Pom</name>
+  <inceptionYear>2013</inceptionYear>
+  <packaging>pom</packaging>
+
+  <description>
+    This pom is the parent of all Camunda Platform projects
+  </description>
+
+  <properties>
+    <version.quarkus>2.0.2.Final</version.quarkus>
+    <version.spring.framework>5.2.14.RELEASE</version.spring.framework>
+    <version.spring-boot>2.5.0</version.spring-boot>
+    <version.cxf>3.0.3</version.cxf>
+    <version.resteasy>2.3.5.Final</version.resteasy>
+    <version.resteasy3>3.14.0.Final</version.resteasy3>
+    <version.jersey2>2.25.1</version.jersey2>
+    <version.groovy>2.4.13</version.groovy>
+    <version.graal.js>21.1.0</version.graal.js>
+    <version.icu.icu4j>68.2</version.icu.icu4j>
+    <version.gson>2.8.5</version.gson>
+    <version.openjpa>2.4.3</version.openjpa>
+    <version.hibernate>5.4.18.Final</version.hibernate>
+    <version.hikaricp>4.0.3</version.hikaricp>
+
+    <version.slf4j>1.7.26</version.slf4j>
+    <version.logback>1.1.2</version.logback>
+    <version.junit>4.13.1</version.junit>
+    <version.assertj>2.9.1</version.assertj>
+    <version.mockito>1.9.5</version.mockito>
+    <version.wiremock>1.58</version.wiremock>
+
+    <version.commonj>1.1.0</version.commonj>
+    <version.bouncycastle>1.47</version.bouncycastle>
+
+    <!-- application servers -->
+    <version.jboss.as>7.2.0.Final</version.jboss.as>
+    <version.wildfly>23.0.2.Final</version.wildfly>
+    <version.wildfly.core>15.0.1.Final</version.wildfly.core>
+
+    <version.tomcat>9.0.43</version.tomcat>
+
+    <version.arquillian>1.1.10.Final</version.arquillian>
+    <version.shrinkwrap.resolvers>2.2.2</version.shrinkwrap.resolvers>
+    <version.selenium>2.45.0</version.selenium>
+    <version.freemarker>2.3.29</version.freemarker>
+
+    <version.jboss-javaee-spec>3.0.2.Final</version.jboss-javaee-spec>
+
+    <!-- OSGi bundles properties -->
+    <camunda.artifact />
+    <camunda.osgi.import.camunda.spin.version>version="[$(version;==;${camunda.spin.version.clean}),$(version;=+;${camunda.spin.version.clean}))"</camunda.osgi.import.camunda.spin.version>
+    <camunda.osgi.import.camunda.connect.version>version="[$(version;==;${camunda.connect.version.clean}),$(version;=+;${camunda.connect.version.clean}))"</camunda.osgi.import.camunda.connect.version>
+    <camunda.osgi.import.camunda.commons.version>version="[$(version;==;${camunda.commons.version.clean}),$(version;=+;${camunda.commons.version.clean}))"</camunda.osgi.import.camunda.commons.version>
+    <camunda.osgi.import.camunda.version>version="[$(version;==;${camunda.osgi.version.clean}),$(version;=+;${camunda.osgi.version.clean}))"</camunda.osgi.import.camunda.version>
+    <camunda.osgi.import.strict.version>version="[$(version;===;${camunda.osgi.version.clean}),$(version;==+;${camunda.osgi.version.clean}))"</camunda.osgi.import.strict.version>
+    <camunda.osgi.import.default.version>[$(version;==;$(@)),$(version;+;$(@)))</camunda.osgi.import.default.version>
+    <camunda.osgi.import.defaults>
+    </camunda.osgi.import.defaults>
+    <camunda.osgi.import.before.defaults />
+    <camunda.osgi.import.additional />
+    <camunda.osgi.import.pkg>
+      ${camunda.osgi.import.before.defaults},
+      ${camunda.osgi.import.defaults},
+      ${camunda.osgi.import.additional},
+      *
+    </camunda.osgi.import.pkg>
+    <camunda.osgi.activator />
+    <camunda.osgi.failok>false</camunda.osgi.failok>
+    <camunda.osgi.export>${camunda.osgi.export.pkg};${camunda.osgi.version};-noimport:=true</camunda.osgi.export>
+    <!--
+    <camunda.osgi.export.pkg>!*.impl;${camunda.artifact}*</camunda.osgi.export.pkg>
+    <camunda.osgi.private.pkg>${camunda.artifact}*.impl</camunda.osgi.private.pkg>
+    -->
+    <camunda.osgi.export.pkg>${camunda.artifact}*</camunda.osgi.export.pkg>
+    <camunda.osgi.private.pkg />
+    <camunda.osgi.version>version=${project.version}</camunda.osgi.version>
+    <camunda.osgi.split.pkg>-split-package:=first</camunda.osgi.split.pkg>
+    <camunda.osgi.import>${camunda.osgi.import.pkg}</camunda.osgi.import>
+    <camunda.osgi.dynamic />
+    <camunda.osgi.symbolic.name>${camunda.artifact}</camunda.osgi.symbolic.name>
+    <camunda.osgi.exclude.dependencies>false</camunda.osgi.exclude.dependencies>
+    <camunda.osgi.remove.headers>Ignore-Package,Include-Resource,Private-Package,Bundle-DocURL</camunda.osgi.remove.headers>
+    <camunda.osgi.include.resource>{maven-resources}</camunda.osgi.include.resource>
+    <camunda.osgi.embed />
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>org.camunda.bpm</groupId>
+        <artifactId>camunda-bom</artifactId>
+        <version>${project.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>2.2.3</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-impl</artifactId>
+        <version>2.2.4</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
+   <build>
+    <pluginManagement>
+      <plugins>
+        <!-- test plugins -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.22.2</version>
+          <configuration>
+            <runOrder>hourly</runOrder>
+            <systemPropertyVariables>
+              <myWorkingDir>${project.build.directory}</myWorkingDir>
+            </systemPropertyVariables>
+            <argLine>-Xmx968m -Duser.language=en -Duser.region=US</argLine>
+            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.16</version>
+          <executions>
+              <execution>
+                <goals>
+                  <goal>integration-test</goal>
+                  <goal>verify</goal>
+                </goals>
+              </execution>
+            </executions>
+        </plugin>
+
+        <!-- code plugins -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>2.8</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.6</version>
+        </plugin>
+
+        <!-- artifact plugins -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <configuration>
+            <createSourcesJar>true</createSourcesJar>
+          </configuration>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>shade</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.8</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>1.9.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <configuration>
+           <excludeDependencies>${camunda.osgi.exclude.dependencies}</excludeDependencies>
+           <instructions>
+             <Bundle-Name>${project.name}</Bundle-Name>
+             <Bundle-SymbolicName>${camunda.osgi.symbolic.name}</Bundle-SymbolicName>
+             <Bundle-Activator>${camunda.osgi.activator}</Bundle-Activator>
+             <Export-Package>${camunda.osgi.export}</Export-Package>
+             <Import-Package>${camunda.osgi.import}</Import-Package>
+             <DynamicImport-Package>${camunda.osgi.dynamic}</DynamicImport-Package>
+             <Private-Package>${camunda.osgi.private.pkg}</Private-Package>
+             <Implementation-Title>camunda</Implementation-Title>
+             <Implementation-Version>${project.version}</Implementation-Version>
+             <Include-Resource>${camunda.osgi.include.resource}</Include-Resource>
+             <_versionpolicy>${camunda.osgi.import.default.version}</_versionpolicy>
+             <_removeheaders>${camunda.osgi.remove.headers}</_removeheaders>
+             <_failok>${camunda.osgi.failok}</_failok>
+             <Export-Service>${camunda.osgi.export.service}</Export-Service>
+             <Import-Service>${camunda.osgi.import.service}</Import-Service>
+             <Embed-Dependency>${camunda.osgi.embed}</Embed-Dependency>
+            </instructions>
+           <versions>
+            <camunda.osgi.version.clean>${project.version}</camunda.osgi.version.clean>
+            <camunda.connect.version.clean>${version.camunda.connect}</camunda.connect.version.clean>
+            <camunda.spin.version.clean>${version.camunda.spin}</camunda.spin.version.clean>
+            <camunda.commons.version.clean>${version.camunda.commons}</camunda.commons.version.clean>
+           </versions>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.cargo</groupId>
+          <artifactId>cargo-maven2-plugin</artifactId>
+          <version>1.7.2</version>
+        </plugin>
+        <plugin>
+          <groupId>net.kennychua</groupId>
+          <artifactId>maven-urlpoller-plugin</artifactId>
+          <version>1.0.3</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>sql-maven-plugin</artifactId>
+          <version>1.5</version>
+          <configuration>
+            <keepFormat>true</keepFormat>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>clirr-maven-plugin</artifactId>
+          <version>2.8</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.4.0</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <configuration>
+            <failOnError>false</failOnError>
+            <additionalparam>-Xdoclint:none</additionalparam>
+            <quiet>true</quiet>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>license-header-check</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.mycila</groupId>
+            <artifactId>license-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <repositories>
+    <repository>
+      <id>JBoss public</id>
+      <name>jboss</name>
+      <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+    </repository>
+    <!-- required for commonJ dependency -->
+    <repository>
+      <id>com.springsource.repository.bundles.external</id>
+      <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+      <url>https://repository.springsource.com/maven/bundles/external</url>
+    </repository>
+  </repositories>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>camunda services GmbH</name>
+    <url>http://www.camunda.com</url>
+  </organization>
+
+  <url>http://www.camunda.org</url>
+</project>
+
+

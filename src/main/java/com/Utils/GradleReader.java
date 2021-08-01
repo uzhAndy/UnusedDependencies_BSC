@@ -19,8 +19,11 @@ public class GradleReader {
         try{
             contents = FileUtils.readFileToString(gradleFile, StandardCharsets.UTF_8);
         } catch (IOException e){
-            e.printStackTrace();
+//            e.printStackTrace();
+        System.out.println("IOException while reading gradle build file");
+
         }
+
 
         Pattern rawDependencies = Pattern.compile("dependencies \\{\\n((?:.*?|\\n)*?)}", Pattern.MULTILINE);
         Matcher matcher = rawDependencies.matcher(contents);

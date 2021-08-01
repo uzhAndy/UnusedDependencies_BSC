@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.2.RELEASE</version>
+		<relativePath/>
+	</parent>
+
+	<groupId>com.roncoo.pay</groupId>
+	<artifactId>roncoo-pay</artifactId>
+	<version>2.1.2-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>roncoo-pay</name>
+	<description>龙果开源支付</description>
+
+	<organization>
+		<name>Roncoo</name>
+		<url>http://www.roncoo.com</url>
+	</organization>
+
+	<!--项目模块-->
+	<modules>
+		<!--平台通知消息的处理-->
+		<module>roncoo-pay-app-notify</module>
+		<!--商户订单通知-->
+		<module>roncoo-pay-app-order-polling</module>
+		<!--对账流程app,发起对账核心业务-->
+		<module>roncoo-pay-app-reconciliation</module>
+		<!--结算定时处理app，发起定时跑批处理，统计结算数据-->
+		<module>roncoo-pay-app-settlement</module>
+		<!--core 是支付系统核心基础包-->
+		<module>roncoo-pay-common-core</module>
+		<!--支付系统核心业务-->
+		<module>roncoo-pay-service</module>
+		<!--运营boss后台-->
+		<module>roncoo-pay-web-boss</module>
+		<!--支付网关web-->
+		<module>roncoo-pay-web-gateway</module>
+		<!--商户后台-->
+			<module>roncoo-pay-web-merchant</module>
+		<!--模拟工程-->
+		<module>roncoo-pay-web-sample-shop</module>
+	</modules>
+
+	<!-- 配置maven地址 -->
+	<distributionManagement>
+		<repository>
+			<id>nexus-releases</id>
+			<name>Nexus Release Repository</name>
+			<url>http://192.168.1.221:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<name>Nexus Snapshot Repository</name>
+			<url>http://192.168.1.221:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<!--版本维护-->
+	<properties>
+		<mybatis-spring-boot-starter.version>2.0.0</mybatis-spring-boot-starter.version>
+		<fastjson.version>1.2.56</fastjson.version>
+		<druid.version>1.1.13</druid.version>
+		<alipay-sdk-java.version>3.4.49.ALL</alipay-sdk-java.version>
+		<!--<alipay-trade-sdk.version>1.0</alipay-trade-sdk.version>-->
+
+		<org.apache.shiro.version>1.4.2</org.apache.shiro.version>
+
+		<slf4j-api.version>1.8.0-beta2</slf4j-api.version>
+		<slf4j-log4j12.version>1.8.0-beta2</slf4j-log4j12.version>
+		<log4j.version>1.2.17</log4j.version>
+
+		<commons-lang.version>2.6</commons-lang.version>
+		<commons-httpclient.version>3.1</commons-httpclient.version>
+		<dom4j.version>1.6.1</dom4j.version>
+		<jdom.version>2.0.2</jdom.version>
+		<javax.json-api.version>1.1.4</javax.json-api.version>
+		<commons-io.version>2.6</commons-io.version>
+		<httpclient.version>4.5.7</httpclient.version>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<!--版本管理-->
+	<dependencyManagement>
+		<dependencies>
+			<!--项目模块-->
+			<dependency>
+				<groupId>com.roncoo.pay.common</groupId>
+				<artifactId>roncoo-pay-common-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.roncoo.pay.service</groupId>
+				<artifactId>roncoo-pay-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<!--spring boot-->
+			<dependency>
+				<groupId>org.mybatis.spring.boot</groupId>
+				<artifactId>mybatis-spring-boot-starter</artifactId>
+				<version>${mybatis-spring-boot-starter.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus</artifactId>
+				<version>2.1.0</version>
+			</dependency>
+
+			<!--Alibaba-->
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>${fastjson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>druid</artifactId>
+				<version>${druid.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alipay.sdk</groupId>
+				<artifactId>alipay-sdk-java</artifactId>
+				<version>${alipay-sdk-java.version}</version>
+			</dependency>
+
+			<!-- shiro -->
+			<dependency>
+				<groupId>org.apache.shiro</groupId>
+				<artifactId>shiro-core</artifactId>
+				<version>${org.apache.shiro.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.shiro</groupId>
+				<artifactId>shiro-web</artifactId>
+				<version>${org.apache.shiro.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.shiro</groupId>
+				<artifactId>shiro-spring</artifactId>
+				<version>${org.apache.shiro.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.shiro</groupId>
+				<artifactId>shiro-ehcache</artifactId>
+				<version>${org.apache.shiro.version}</version>
+			</dependency>
+
+			<!--第三方jar-->
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>${commons-lang.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-httpclient</groupId>
+				<artifactId>commons-httpclient</artifactId>
+				<version>${commons-httpclient.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>dom4j</groupId>
+				<artifactId>dom4j</artifactId>
+				<version>${dom4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jdom</groupId>
+				<artifactId>jdom</artifactId>
+				<version>${jdom.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.json</groupId>
+				<artifactId>javax.json-api</artifactId>
+				<version>${javax.json-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons-io.version}</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<!-- developer -->
+	<developers>
+		<developer>
+			<name>Along</name>
+			<id>shen.jialong</id>
+			<email>shenjl@roncoo.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+		<developer>
+			<name>peter</name>
+			<id>hu.peter</id>
+			<email>hupt@roncoo.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+		<developer>
+			<name>hugo</name>
+			<id>zeng.hao</id>
+			<email>zengh@roncoo.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+	</developers>
+</project>

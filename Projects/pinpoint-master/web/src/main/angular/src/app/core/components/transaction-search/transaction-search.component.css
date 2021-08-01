@@ -1,0 +1,65 @@
+:host {
+    display: flex;
+}
+.l-search-group-wrap {
+    display: flex;
+    flex-flow: row wrap;
+    padding: 0 10px;
+    font-size: 13px;
+    justify-content: flex-end;
+    position:relative;
+}
+.l-search-group-wrap .fas {
+    color:var(--icon-default);
+    font-size:18px;
+}
+.l-search-group-wrap .l-search-group2 {
+    height:32px;
+}
+.l-search-group-wrap .l-search-group2 input {
+    float: left;
+    display: inline-block;
+    height: 100%;
+    border: 1px solid var(--primary);
+    padding:0 10px;
+    background:var(--background-default);
+}
+.l-search-group-wrap .l-search-group2 input:focus {
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 0 1px 1px var(--primary-color);
+    outline: none;
+}
+.l-search-group-wrap button {
+    margin-left: 10px;
+}
+.l-search-group-wrap .l-error-message {
+    width: 300px;
+    color: var(--status-fail);
+    margin-left: 10px;
+}
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    outline: 0;
+    border-radius: 0px;
+    color: var(--text-knockout);
+    float: left;
+    height: 100%;
+    display: inline-block;
+    padding: 7px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    background-color: var(--primary-color);
+    width: 100px;
+}
+.l-search-group-wrap .l-search-group2 .fa-angle-down {
+    position: absolute;
+    color: var(--text-knockout);
+    top: 8px;
+    left: 94px;
+    font-size: 15px;
+}
+.l-error-message {
+    margin-left: 10px;
+    margin-top: 8px;
+}

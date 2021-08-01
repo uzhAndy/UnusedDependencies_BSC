@@ -78,10 +78,11 @@ public class BuildFile extends File {
 //            this.declaredModules.addAll(modules);
 //            this.declaredDependencies.forEach(dependency -> System.out.println(dependency));
         } catch (XmlPullParserException | FileNotFoundException xmlPullParserException) {
-            System.out.println(this.getAbsolutePath());
+            System.out.println("parsing build file failed " + this.getAbsolutePath());
             xmlPullParserException.printStackTrace();
         } catch (IOException ioException) {
-            ioException.printStackTrace();
+//            ioException.printStackTrace();
+            System.out.println("IOException while parsing build file: " + this.getAbsolutePath());
         }
     }
 

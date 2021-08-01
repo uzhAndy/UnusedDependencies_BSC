@@ -1,0 +1,18 @@
+{
+    "type" : "object",
+    "properties" : {
+        "a" : {
+            "$ref" : "a.json"
+        },
+        "fragmentOfSelf" : {
+            "$ref" : "#/properties/a"
+        },
+        "fragmentOfA" : {
+            "$ref" : "a.json/#/additionalProperties"
+        },
+        "fragmentWithAnotherRef" : {
+            "$ref" : "nestedSelfRefsReadAsString.json/#/definitions/Thing/properties/namespace"
+        }
+    },
+    "additionalProperties" : false
+}

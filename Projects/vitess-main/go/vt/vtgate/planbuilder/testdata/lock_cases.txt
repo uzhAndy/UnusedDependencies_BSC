@@ -1,0 +1,64 @@
+# get_lock from dual
+"select get_lock('xyz', 10) from dual"
+{
+  "QueryType": "SELECT",
+  "Original": "select get_lock('xyz', 10) from dual",
+  "Instructions": {
+    "OperatorType": "Lock",
+    "Keyspace": {
+      "Name": "main",
+      "Sharded": false
+    },
+    "TargetDestination": "KeyspaceID(00)",
+    "Query": "select get_lock('xyz', 10) from dual"
+  }
+}
+
+# is_free_lock from dual
+"select is_free_lock('xyz') from dual"
+{
+  "QueryType": "SELECT",
+  "Original": "select is_free_lock('xyz') from dual",
+  "Instructions": {
+    "OperatorType": "Lock",
+    "Keyspace": {
+      "Name": "main",
+      "Sharded": false
+    },
+    "TargetDestination": "KeyspaceID(00)",
+    "Query": "select is_free_lock('xyz') from dual"
+  }
+}
+
+# lock tables read
+"lock tables t as x read local"
+{
+  "QueryType": "LOCK_TABLES",
+  "Original": "lock tables t as x read local",
+  "Instructions": {
+    "OperatorType": "Rows"
+  }
+}
+Gen4 plan same as above
+
+# lock tables write
+"lock tables t low_priority write"
+{
+  "QueryType": "LOCK_TABLES",
+  "Original": "lock tables t low_priority write",
+  "Instructions": {
+    "OperatorType": "Rows"
+  }
+}
+Gen4 plan same as above
+
+# unlock tables
+"unlock tables"
+{
+  "QueryType": "UNLOCK_TABLES",
+  "Original": "unlock tables",
+  "Instructions": {
+    "OperatorType": "Rows"
+  }
+}
+Gen4 plan same as above

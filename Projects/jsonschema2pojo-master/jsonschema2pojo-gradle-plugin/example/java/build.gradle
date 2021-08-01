@@ -1,0 +1,35 @@
+apply plugin: 'java'
+apply plugin: 'jsonschema2pojo'
+
+buildscript {
+  repositories {
+    mavenLocal()
+    jcenter()
+  }
+
+  dependencies {
+    classpath 'org.jsonschema2pojo:jsonschema2pojo-gradle-plugin:latest.integration'
+
+    // see src/main/resources/json/external_dependencies.json
+    classpath 'joda-time:joda-time:2.2'
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'javax.validation:validation-api:1.1.0.CR2'
+  implementation 'jakarta.validation:jakarta.validation-api:3.0.0'
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.1'
+
+  // see src/main/resources/json/external_dependencies.json
+  implementation 'joda-time:joda-time:2.2'
+}
+
+jsonSchema2Pojo {
+  targetPackage = 'example'
+  includeJsr303Annotations = true
+  propertyWordDelimiters = ['_'] as char[]
+}

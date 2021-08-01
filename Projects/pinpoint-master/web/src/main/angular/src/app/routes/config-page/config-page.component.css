@@ -1,0 +1,84 @@
+:host {
+    display: block;
+    height: 100%;
+}
+
+.l-main-container {
+    display: flex;
+    height: calc(100% - 50px);
+}
+
+.l-sidemenu-section {
+    width: 240px;
+    height: 100%;
+    border-right: 1px solid var(--border-primary);
+    background: var(--background-default);
+    font-size: 15px;
+}
+
+.l-list-item {
+    display: block;
+    width: 100%;
+}
+
+.l-separator {
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.l-depth-0 .l-link {
+    display: inline-block;
+    width: 100%;
+    padding: 15px 15px 15px 27px;
+    font-weight: 600;
+    color: rgba(0,0,0,.85);
+}
+
+.l-link:hover {
+    cursor: pointer;
+    background-color: var(--background-hover-default);
+    color: var(--primary-color) !important;
+}
+
+.l-link.active { 
+    color: var(--primary-color) !important;
+}
+
+.l-link-with-arrow {
+    display: flex !important;
+    align-items: center;
+}
+
+.l-link-text {
+    flex: 1;
+}
+
+.l-depth-1 .l-link {
+    margin-left: 15px;
+    font-size: 90%;
+    color: rgba(0,0,0,.65);
+    max-width: calc(100% - 15px);
+}
+
+.l-main-section {
+    background: var(--background-primary);
+    width: calc(100% - 240px);
+    height: 100%;
+    padding: 20px 15px;
+}
+
+.l-exit-button {
+    color: var(--text-knockout);
+    font-size: 20px;
+    height: 100%;
+    outline: none;
+}
+
+.l-experimental-menu-link {
+    font-style: italic;
+}
+
+.l-experimental-menu-link i {
+    font-size: 13px;
+}

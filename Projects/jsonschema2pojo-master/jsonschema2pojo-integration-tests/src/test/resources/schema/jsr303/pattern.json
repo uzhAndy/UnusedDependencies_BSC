@@ -1,0 +1,14 @@
+{
+    "type" : "object",
+    "properties" : {
+        "pattern" : {
+            "type" : "string",
+            "pattern" : "abc.*"
+        },
+        "patternNotApplicable" : {
+            "type" : "string",
+            "format": "uuid",
+            "pattern" : "xzy.*"
+        }
+    }
+}

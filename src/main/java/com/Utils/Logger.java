@@ -12,10 +12,11 @@ import java.util.Date;
 
 public class Logger {
 
-    private static String CLASS_DEPENDENCY_LOG = "C:/Users/LenovoThinkPadT450s/OneDrive - Universität Zürich UZH/Studium/Bachelor Thesis/Repository mining/SourceCodeAnalyzer/Logs.txt";
-    private static String DEPENDENCY_USAGE_REPORT = "C:/Users/LenovoThinkPadT450s/OneDrive - Universität Zürich UZH/Studium/Bachelor Thesis/Repository mining/SourceCodeAnalyzer/DependencyReportUsage.txt";
-    private static String IMPORT_DECLARATIONS = "C:/Users/LenovoThinkPadT450s/OneDrive - Universität Zürich UZH/Studium/Bachelor Thesis/Repository mining/SourceCodeAnalyzer/ImportDeclarations.txt";
-    private static String DEPENDENCY_REPORT_DECLARATIONS = "C:/Users/LenovoThinkPadT450s/OneDrive - Universität Zürich UZH/Studium/Bachelor Thesis/Repository mining/SourceCodeAnalyzer/DependencyReportDeclarations.txt";
+    private static String CLASS_DEPENDENCY_LOG = "C:\\Users\\LenovoThinkPadT450s\\OneDrive - Universität Zürich UZH\\Studium\\Bachelor Thesis\\Repository mining\\Project_Analysis\\NEW\\Logs.txt";
+    private static String DEPENDENCY_USAGE_REPORT = "C:\\Users\\LenovoThinkPadT450s\\OneDrive - Universität Zürich UZH\\Studium\\Bachelor Thesis\\Repository mining\\Project_Analysis\\NEW\\DependencyReportUsage.txt";
+    private static String IMPORT_DECLARATIONS = "C:\\Users\\LenovoThinkPadT450s\\OneDrive - Universität Zürich UZH\\Studium\\Bachelor Thesis\\Repository mining\\Project_Analysis\\NEW\\ImportDeclarations.txt";
+    private static String DEPENDENCY_REPORT_DECLARATIONS = "C:\\Users\\LenovoThinkPadT450s\\OneDrive - Universität Zürich UZH\\Studium\\Bachelor Thesis\\Repository mining\\Project_Analysis\\NEW\\DependencyReportDeclarations.txt";
+    private static String NOT_DETERMINED_IMPORTS = "C:\\Users\\LenovoThinkPadT450s\\OneDrive - Universität Zürich UZH\\Studium\\Bachelor Thesis\\Repository mining\\Project_Analysis\\NEW\\NotDeterminedImports.txt";
 
     private FileWriter fileWriter;
 
@@ -36,6 +37,26 @@ public class Logger {
 
         this.fileWriter.write(logString.toString());
         this.fileWriter.close();
+    }
+
+    public void addLogNotDeterminedImports(Project project, ArrayList<String> notDeterminedImports) {
+
+        ArrayList<Dependency> dependencies = project.getAllDependencies();
+
+        try{
+            this.fileWriter = new FileWriter(NOT_DETERMINED_IMPORTS, true);
+            StringBuilder logString = new StringBuilder();
+            for(String imprt : notDeterminedImports){
+                logString.append(project.getSrcPath()).append(";").append(imprt).append(";").append(dependencies).append("\n");
+            }
+
+            this.fileWriter.write(logString.toString());
+            this.fileWriter.close();
+        } catch (IOException e){
+
+        }
+
+
     }
 
     public void addLogDependencyUsage(ArrayList<DependencyExtended> dependencies, DependencyExtended.DependencyType usageType, Project project, boolean reportStart) throws IOException {
@@ -76,31 +97,12 @@ public class Logger {
 
         String projectFPath = project.getSrcPath();
 
-        if(!project.getRoot().getSrcPath().equals(projectFPath)){
-            projectFPath = projectFPath.replace(project.getRoot().getSrcPath(), "");
-        }
-
         StringBuilder logString = new StringBuilder();
-        if(reportStart){
-            logString.append(project.getRoot().getSrcPath()).append("\n");
-        }
-        logString.append("Project: ").append(projectFPath).append(" Number of submodules: ").append(project.getSubModules().size())
-                    .append(" Number of imports: ").append(project.getUsedImports().size()).append("\n").append("*******************************").append("\n");
+
 
         for(ImportDeclaration importDeclaration: project.getUsedImports()){
-            logString.append(importDeclaration.getNameAsString()).append("\n");
-        }
+            logString.append(projectFPath).append(";").append(importDeclaration.getNameAsString()).append("\n");
 
-        if(!project.getSubModules().isEmpty()){
-            for(Project subModule: project.getSubModules()){
-                projectFPath = subModule.getSrcPath().replace(project.getRoot().getSrcPath(), "");
-                logString.append("Project: ").append(projectFPath).append(" Number of submodules: ").append(project.getSubModules().size()).append("\n")
-                        .append("-------------------------------").append("\n");
-                for(ImportDeclaration importDeclaration: subModule.getUsedImports()){
-                    logString.append(importDeclaration.getNameAsString()).append("\n");
-                }
-                logString.append("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx").append("\n");
-            }
         }
 
         this.fileWriter.write(logString.toString());
@@ -116,31 +118,8 @@ public class Logger {
 
         String buildFilePath = project.getSrcPath();
 
-        if(!project.getRoot().getSrcPath().equals(buildFilePath)){
-            buildFilePath = buildFilePath.replace(project.getRoot().getSrcPath(), "");
-        }
-        if(reportStart){
-            logString.append(project.getRoot().getSrcPath()).append("\n");
-        }
-        logString.append("Build file: ").append(buildFilePath).append("\\").append(project.getProjectType()).append("\tNumber of declared dependencies: ").append(project.getDeclaredDependencies().size()).append("\n")
-                    .append("*******************************").append("\n");
-
         for(Dependency dependency: project.getBuildFile().getDeclaredDependencies()){
-            logString.append("GroupId: ").append(dependency.getGroupId()).append("ArtifactId: ").append(dependency.getArtifactId()).append("\n");
-        }
-
-        logString.append("=======================").append("\n");
-
-        if(!project.getSubModules().isEmpty()){
-            for(Project subModule: project.getSubModules()){
-                buildFilePath = subModule.getBuildFile().getAbsolutePath().replace(project.getRoot().getSrcPath(), "");
-                logString.append("Build file: ").append(buildFilePath).append("\tNumber of declared dependencies: ").append(subModule.getDeclaredDependencies().size()).append("\n")
-                        .append("-------------------------------").append("\n");
-                for(Dependency dependency: subModule.getBuildFile().getDeclaredDependencies()){
-                    logString.append("GroupId: ").append(dependency.getGroupId()).append("ArtifactId: ").append(dependency.getArtifactId()).append("\n");
-                }
-                logString.append("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx").append("\n");
-            }
+            logString.append(buildFilePath).append(";").append("GroupId: ").append(dependency.getGroupId()).append("\tArtifactId: ").append(dependency.getArtifactId()).append("\n");
         }
 
         this.fileWriter.write(logString.toString());

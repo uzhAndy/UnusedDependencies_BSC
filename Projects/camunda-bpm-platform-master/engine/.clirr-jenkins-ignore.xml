@@ -1,0 +1,26 @@
+<differences>
+  <difference>
+    <!-- It is okay to add classes to the set of superclasses -->
+    <className>**</className>
+    <differenceType>5000</differenceType>
+    <to>**</to>
+  </difference>
+  <difference>
+    <!-- It is okay to add methods to an interface-->
+    <className>**</className>
+    <differenceType>7012</differenceType>
+    <method>*</method>
+  </difference>
+
+  <!-- 8001: class removed -->
+  <!-- class removed from public API due to CAM-4307 -->
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>org/camunda/bpm/engine/history/UserOperationLogContext</className>
+  </difference>
+  <!-- package moved into typed-values module of camunda-commons project -->
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>org/camunda/bpm/engine/variable/**/*</className>
+  </difference>
+</differences>

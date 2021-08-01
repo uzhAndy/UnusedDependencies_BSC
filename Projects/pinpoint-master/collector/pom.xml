@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2019 NAVER Corp.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.navercorp.pinpoint</groupId>
+        <artifactId>pinpoint</artifactId>
+        <version>2.3.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>pinpoint-collector</artifactId>
+    <name>pinpoint-collector</name>
+    <packaging>jar</packaging>
+
+    <properties>
+        <jdk.version>1.8</jdk.version>
+        <jdk.home>${env.JAVA_8_HOME}</jdk.home>
+        <sniffer.artifactid>java18</sniffer.artifactid>
+
+        <guava.version>${guava-jdk8.version}</guava.version>
+        <javax.servlet.version>${javax.servlet4.version}</javax.servlet.version>
+        <spring.version>${spring5.version}</spring.version>
+        <spring.security.version>${spring.security5.version}</spring.security.version>
+        <log4j2.version>${log4j2-jdk8.version}</log4j2.version>
+
+        <pinpoint.collector.executable.name>${project.artifactId}-boot-${project.version}</pinpoint.collector.executable.name>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.navercorp.pinpoint</groupId>
+            <artifactId>pinpoint-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.navercorp.pinpoint</groupId>
+            <artifactId>pinpoint-commons-buffer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.navercorp.pinpoint</groupId>
+            <artifactId>pinpoint-commons-profiler</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.navercorp.pinpoint</groupId>
+            <artifactId>pinpoint-commons-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.navercorp.pinpoint</groupId>
+            <artifactId>pinpoint-commons-hbase</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.navercorp.pinpoint</groupId>
+            <artifactId>pinpoint-rpc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.navercorp.pinpoint</groupId>
+            <artifactId>pinpoint-thrift</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.navercorp.pinpoint</groupId>
+            <artifactId>pinpoint-grpc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.navercorp.pinpoint</groupId>
+            <artifactId>pinpoint-plugins-assembly</artifactId>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.navercorp.pinpoint</groupId>
+            <artifactId>pinpoint-profiler</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.navercorp.pinpoint</groupId>
+                    <artifactId>pinpoint-bootstrap</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.thrift</groupId>
+            <artifactId>libthrift</artifactId>
+        </dependency>
+
+        <!-- if  2.3.x jackson needed, should modify scope runtime -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Logging dependencies -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-jcl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-actuator</artifactId>-->
+        <!--            <version>${spring-boot.version}</version>-->
+        <!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.boot.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+
+        <!-- serving performance metrics -->
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-jvm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-servlets</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <!-- servlet artifactid is odd -->
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.navercorp.pinpoint</groupId>
+            <artifactId>pinpoint-rpc</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.navercorp.pinpoint.collector.CollectorApp</mainClass>
+                    <outputDirectory>${project.build.directory}/deploy</outputDirectory>
+                    <executable>true</executable>
+                    <attach>false</attach>
+                    <finalName>${pinpoint.collector.executable.name}</finalName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+
+    </profiles>
+</project>

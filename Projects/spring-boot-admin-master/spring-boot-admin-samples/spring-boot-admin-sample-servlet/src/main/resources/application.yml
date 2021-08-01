@@ -1,0 +1,102 @@
+---
+info:
+  scm-url: "@scm.url@"
+  build-url: "https://travis-ci.org/codecentric/spring-boot-admin"
+
+logging:
+  file:
+    name: "target/boot-admin-sample-servlet.log"
+  pattern:
+    file: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID}){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+
+spring:
+  application:
+    name: spring-boot-admin-sample-servlet
+  profiles:
+    active:
+      - secure
+  boot:
+    admin:
+      client:
+        url: http://localhost:8080
+        instance:
+          metadata:
+            tags:
+              environment: test
+  jmx:
+    enabled: true
+  main:
+    lazy-initialization: true
+---
+
+# tag::customization-external-views[]
+spring:
+  boot:
+    admin:
+      ui:
+        external-views:
+          - label: "🚀"
+            url: http://codecentric.de
+            order: 2000
+# end::customization-external-views[]
+
+---
+spring:
+  profiles: dev
+  boot:
+    admin:
+      ui:
+        cache:
+          no-cache: true
+        template-location: file:../../spring-boot-admin-server-ui/target/dist/
+        resource-locations: file:../../spring-boot-admin-server-ui/target/dist/
+        cache-templates: false
+        extension-resource-locations: file:../spring-boot-admin-sample-custom-ui/target/dist/
+
+---
+
+# tag::customization-view-settings[]
+spring:
+  boot:
+    admin:
+      ui:
+        view-settings:
+          - name: "journal"
+            enabled: false
+# end::customization-view-settings[]
+
+---
+spring:
+  profiles: insecure
+
+info.tags.security: insecure
+
+---
+spring:
+  profiles: secure
+  security:
+    user:
+      name: "user"
+      password: "password"
+  boot:
+    admin:
+      client:
+        username: "user"       #These two are needed so that the client
+        password: "password"   #can register at the protected server api
+        instance:
+          metadata:
+            user.name: "user"         #These two are needed so that the server
+            user.password: "password" #can access the protected client endpoints
+
+info.tags.security: secured
+

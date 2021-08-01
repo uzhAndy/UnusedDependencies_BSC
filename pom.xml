@@ -20,6 +20,11 @@
             <version>3.8.1</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
             <version>8.42</version>
@@ -33,6 +38,16 @@
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
         </dependency>
     </dependencies>
 

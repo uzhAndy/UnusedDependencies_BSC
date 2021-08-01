@@ -1,0 +1,9 @@
+{
+  "type" : "object",
+  "properties" : {
+    "a" : {
+      "existingJavaType": "org.jsonschema2pojo.NoopAnnotator",
+      "type": "object"
+    }
+  }
+}

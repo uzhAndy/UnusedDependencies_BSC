@@ -56,6 +56,11 @@ public class Project {
     }
 
     public ArrayList<Project> getSubModules() {
+        if(this.isParentModule()){
+            if(this.getChild().isParentModule()){
+                return this.getChild().getSubModules();
+            }
+        }
         return this.subModules;
     }
 
@@ -153,6 +158,8 @@ public class Project {
         }
     }
 
+
+
     private void initializeProject(){
 
         File dir = new File(this.src_path);
@@ -176,7 +183,7 @@ public class Project {
             this.log.addLogDeclaredDependencies(this, this.isRoot);
 
         }catch (IOException e){
-            e.printStackTrace();
+            System.out.println("Adding logs for import declarations or declared dependencies failed");
         }
     }
 
@@ -229,11 +236,26 @@ public class Project {
         }
     }
 
+    public ArrayList<Dependency> getAllDependencies(){
+        ArrayList<Dependency> dependencies = new ArrayList<>();
+        Project proj = this;
+        while(proj.isChildModule()){
+            dependencies.addAll(this.getParent().getAllDependencies());
+            proj = proj.getParent();
+        }
+        dependencies.addAll(this.getDeclaredDependencies());
+        return dependencies;
+    }
+
     public ArrayList<String> getAllDeclaredModules(Project project){
         while(project.isChildModule){
             return getAllDeclaredModules(project.getParent());
         }
         return project.getBuildFile().getDeclaredModules();
+    }
+
+    private boolean isParenModule(){
+        return this.isParentModule;
     }
 
     private boolean isSubmodule(File file){

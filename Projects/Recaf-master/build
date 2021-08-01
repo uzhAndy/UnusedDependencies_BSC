@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e
+echo '==========================='
+echo 'Build Modes'
+echo '------'
+echo ' 1. Build with tests (Slow)'
+echo ' 2. Build with no tests (Fast)'
+echo '------'
+echo ' 3. Exit'
+echo '==========================='
+echo -n 'Enter build mode: '
+read mode
+if [[ $mode == '1' ]]; then
+  ./mvnw clean package;
+elif [[ $mode == '2' ]]; then
+  ./mvnw clean package -Dmaven.test.skip -Dcheckstyle.skip;
+fi;

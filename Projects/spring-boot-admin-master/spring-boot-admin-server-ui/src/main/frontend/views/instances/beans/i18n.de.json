@@ -1,0 +1,13 @@
+{
+  "instances": {
+    "beans": {
+      "label": "Beans",
+      "name": "Name",
+      "aliases": "Aliase",
+      "type": "Typ",
+      "resource": "Ressource",
+      "dependencies": "Abhängigkeiten",
+      "fetch_failed": "Fetching beans failed."
+    }
+  }
+}

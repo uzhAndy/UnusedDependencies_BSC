@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2014-2019 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>spring-boot-admin-server-ui</artifactId>
+    <name>Spring Boot Admin Server UI</name>
+    <description>Spring Boot Admin Server UI</description>
+    <parent>
+        <groupId>de.codecentric</groupId>
+        <artifactId>spring-boot-admin-build</artifactId>
+        <version>${revision}</version>
+        <relativePath>../spring-boot-admin-build</relativePath>
+    </parent>
+    <dependencies>
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
+        <!-- Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>install-node-and-npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v15.12.0</nodeVersion>
+                            <npmVersion>7.6.3</npmVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm-install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>ci --verbose</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm-build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run build</arguments>
+                            <environmentVariables>
+                                <PROJECT_VERSION>${project.version}</PROJECT_VERSION>
+                            </environmentVariables>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm-test</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run test:unit</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>woff</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>woff2</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>eot</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>swf</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>ico</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>png</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                    <includeEmptyDirs>true</includeEmptyDirs>
+                </configuration>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>target/dist</directory>
+                <targetPath>META-INF/spring-boot-admin-server-ui</targetPath>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+    </build>
+</project>

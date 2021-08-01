@@ -1,0 +1,327 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.camunda</groupId>
+    <artifactId>camunda-bpm-release-parent</artifactId>
+    <version>2.2.1</version>
+    <!-- do not remove empty tag - http://jira.codehaus.org/browse/MNG-4687 -->
+    <relativePath />
+  </parent>
+
+  <groupId>org.camunda.bpm</groupId>
+  <artifactId>camunda-root</artifactId>
+  <version>7.16.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Camunda Platform - Root Pom</name>
+  <inceptionYear>2013</inceptionYear>
+
+  <description>
+    This pom defines the modules that make up the build.
+    The parent pom for all Camunda Platform projects can be found in the parent directory relative to this file.
+  </description>
+
+  <properties>
+    <license.includeTransitiveDependencies>false</license.includeTransitiveDependencies>
+
+    <!-- These properties are used in both the BOM as well as camunda-parent and subprojects -->
+    <version.mybatis>3.5.6</version.mybatis>
+    <version.joda-time>2.1</version.joda-time>
+    <version.uuid-generator>3.2.0</version.uuid-generator>
+    <version.camunda.commons>1.10.0</version.camunda.commons>
+    <version.camunda.connect>1.5.2</version.camunda.connect>
+    <version.camunda.spin>1.11.0-SNAPSHOT</version.camunda.spin>
+    <version.camunda.template-engines>2.0.0</version.camunda.template-engines>
+    <version.camunda.ee.xslt-plugin>1.1.0</version.camunda.ee.xslt-plugin>
+    <version.feel-scala>1.13.1</version.feel-scala>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>1.14</version>
+        <configuration>
+          <acceptPomPackaging>true</acceptPomPackaging>
+          <excludedScopes>test</excludedScopes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <!-- distro profile is default and builds the complete distribution.
+         Does not run integration tests. -->
+    <profile>
+      <id>distro</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <!-- This profile is run in the CI as the first step (platform-ASSEMBLY); It must not activate
+          any modules that have a dependency to the webapps. See also the referenced POMs,
+          they usually define which modules are covered by the distro profile -->
+        <module>spring-boot-starter</module>
+
+        <module>qa</module>
+
+        <module>distro/h2-webapp</module>
+
+        <module>javaee/ejb-service</module>
+        <module>javaee/ejb-client</module>
+        <module>javaee/jobexecutor-ra</module>
+        <module>javaee/jobexecutor-rar</module>
+
+        <module>model-api</module>
+        <module>typed-values</module>
+        <module>engine-dmn</module>
+
+        <module>engine</module>
+        <module>engine-cdi</module>
+        <module>engine-spring</module>
+        <module>engine-rest</module>
+
+        <module>webapps</module>
+
+        <module>examples/invoice</module>
+
+        <module>engine-plugins</module>
+
+        <module>distro/license-book</module>
+        <module>distro/jbossas7</module>
+        <module>distro/tomcat</module>
+        <module>distro/sql-script</module>
+        <module>distro/run</module>
+
+        <module>clients/java</module>
+
+        <module>internal-dependencies</module>
+        <module>database</module>
+        <module>parent</module>
+        <module>bom</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>distro-ce</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <!-- This profile is run in the CI after the webapps were built (platform-ASSEMBLY);
+          It should activate any module that has a dependency to the webapps -->
+        <module>spring-boot-starter</module>
+
+        <module>distro/license-book</module>
+        <module>distro/jbossas7</module>
+        <module>distro/tomcat</module>
+        <module>distro/run</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>distro-serverless</id>
+      <modules>
+        <module>qa</module>
+
+        <module>distro/h2-webapp</module>
+
+        <module>engine</module>
+        <module>engine-cdi</module>
+        <module>engine-spring</module>
+        <module>engine-rest</module>
+
+        <module>webapps</module>
+
+        <module>examples/invoice</module>
+
+        <module>engine-plugins</module>
+
+        <module>distro/sql-script</module>
+
+        <module>internal-dependencies</module>
+        <module>database</module>
+        <module>parent</module>
+        <module>bom</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>distro-jbossas7</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>javaee/ejb-client</module>
+        <module>distro/license-book</module>
+        <module>distro/jbossas7</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>distro-tomcat</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>distro/license-book</module>
+        <module>distro/tomcat</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>distro-wildfly</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>javaee/ejb-client</module>
+        <module>distro/license-book</module>
+        <module>distro/wildfly</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>distro-webjar</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>distro/webjar</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>distro-run</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>distro/run</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>distro-starter</id>
+      <!-- This profile is run in the release CI for building the enterprise artifacts
+          It can be removed if the distro job is merged with the assembly job and
+          distro-ce is not used for building the spring boot starter -->
+      <modules>
+        <module>spring-boot-starter</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <!-- profile for running process-engine unit tests in QA -->
+      <id>check-engine</id>
+      <modules>
+        <module>engine</module>
+        <module>engine-cdi</module>
+        <module>engine-spring</module>
+        <module>engine-rest</module>
+
+        <module>internal-dependencies</module>
+        <module>database</module>
+        <module>parent</module>
+        <module>bom</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <!-- profile for running webapp unit tests in QA -->
+      <id>check-webapps</id>
+      <modules>
+        <module>internal-dependencies</module>
+        <module>parent</module>
+        <module>bom</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>sonatype-oss-release</id>
+      <modules>
+        <module>spring-boot-starter</module>
+        <module>model-api</module>
+
+        <module>engine</module>
+        <module>engine-cdi</module>
+        <module>engine-spring</module>
+        <module>engine-rest</module>
+
+        <module>typed-values</module>
+        <module>engine-dmn</module>
+
+        <module>javaee/ejb-client</module>
+
+        <module>webapps</module>
+
+        <module>engine-plugins</module>
+
+        <module>distro/webjar</module>
+
+        <module>clients/java</module>
+
+        <module>internal-dependencies</module>
+        <module>database</module>
+        <module>parent</module>
+        <module>bom</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>license-header-check</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.mycila</groupId>
+            <artifactId>license-maven-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>camunda services GmbH</name>
+    <url>http://www.camunda.com</url>
+  </organization>
+
+  <url>http://www.camunda.org</url>
+
+  <developers>
+    <developer>
+      <id>camunda.org</id>
+      <name>Camunda Platform Community</name>
+      <organization>camunda.org</organization>
+      <organizationUrl>http://camunda.org</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <url>https://github.com/camunda/camunda-bpm-platform</url>
+    <connection>scm:git:git@github.com:camunda/camunda-bpm-platform.git</connection>
+    <developerConnection>scm:git:git@github.com:camunda/camunda-bpm-platform.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <issueManagement>
+    <system>Jira</system>
+    <url>https://app.camunda.com/jira/browse/CAM/</url>
+  </issueManagement>
+
+  <repositories>
+    <repository>
+      <id>fix-maven-snapshots-issue-with-nexus</id>
+      <url>allow-parent-pom-resolving-when-snapshot</url>
+    </repository>
+  </repositories>
+</project>

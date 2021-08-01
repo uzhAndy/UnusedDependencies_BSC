@@ -1,0 +1,108 @@
+{
+    "type" : "object",
+    "properties" : {
+        "booleanProperty" : {
+            "type" : "boolean"
+        },
+        "stringProperty" : {
+            "type" : "string"
+        },
+        "integerProperty" : {
+            "type" : "integer"
+        },
+        "numberProperty" : {
+            "type" : "number"
+        },
+        "arrayProperty" : {
+            "type" : "array"
+        },
+        "nullProperty" : {
+            "type" : "null"
+        },
+        "anyProperty" : {
+            "type" : "any"
+        },
+        "objectProperty" : {
+            "type" : "object",
+            "properties" : {
+                "property" : {
+                    "type" : "string"
+                }
+            }
+        },
+        "defaultProperty" : {
+        },
+        "impliedObjectProperty" : {
+            "properties" : {
+                "property" : {
+                    "type" : "string"
+                }
+            }
+        },
+        "unknownProperty" : {
+            "type" : "some-unknown-type"
+        },
+        "reusedClasspathType" : {
+            "type" : "object",
+            "existingJavaType" : "java.util.Locale"
+        },
+        "reusedGeneratedType" : {
+            "type" : "object",
+            "javaType" : "com.example.ObjectProperty"
+        },
+        "primitiveJavaType" : {
+            "type" : "object",
+            "existingJavaType" : "long"
+        },
+        "integerWithJavaType" : {
+          "type" : "integer",
+          "existingJavaType" : "java.math.BigDecimal"
+        },
+        "numberWithJavaType" : {
+          "type" : "number",
+          "existingJavaType" : "java.util.UUID"
+        },
+        "stringWithJavaType" : {
+          "type" : "string",
+          "existingJavaType" : "java.lang.Boolean"
+        },
+        "enumWithJavaType" : {
+          "type" : "string",
+          "enum" : ["a", "b", "c"],
+          "existingJavaType" : "java.lang.Boolean"
+        },
+        "enumWithUnqualifiedJavaType" : {
+          "type" : "string",
+          "enum" : ["a", "b", "c"],
+          "javaType" : "Bar"
+        },
+        "booleanWithJavaType" : {
+          "type" : "boolean",
+          "existingJavaType" : "long"
+        },
+        "dateWithJavaType" : {
+          "type" : "string",
+          "format" : "date-time",
+          "existingJavaType" : "int"
+        },
+        "typeWithInterfaces" : {
+            "type" : "object",
+            "javaInterfaces" : ["java.io.Serializable", "Cloneable"]
+        },
+        "typeWithGenericInterface" : {
+            "type" : "object",
+            "javaInterfaces" : ["org.jsonschema2pojo.integration.TypeIT.InterfaceWithGenerics<String,Integer,Boolean>"]
+        },
+        "typeWithInheritedClass" : {
+            "type" : "object",
+            "extendsJavaClass" : "org.jsonschema2pojo.integration.TypeIT.InheritedClass"
+        },
+        "typeWithInheritedClassWithGenerics" : {
+            "type" : "object",
+            "extendsJavaClass" : "org.jsonschema2pojo.integration.TypeIT.InheritedClassWithGenerics<String,Integer,Boolean>"
+        },
+        "nullableStringProperty" : {
+          "type" : ["null", "string"]
+        }
+    }
+}

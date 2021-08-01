@@ -39,17 +39,21 @@ public class DependencyReport {
     public void addUnusedDependencies(ArrayList<DependencyExtended> dependencies){
         for(DependencyExtended dependency: dependencies){
 
-            StringBuilder candidateDependency = new StringBuilder()
+            StringBuilder candidateDependencyUSED = new StringBuilder()
                                                         .append(dependency.getBuildFile().toString()).append(";")
                                                         .append(dependency).append(";")
                                                         .append(DependencyType.USED)
                                                         .append("\n");
+            StringBuilder candidateDependencyUNUSED = new StringBuilder()
+                                                        .append(dependency.getBuildFile().toString()).append(";")
+                                                        .append(dependency).append(";")
+                                                        .append(DependencyType.UNUSED)
+                                                        .append("\n");
 
-            if(!this.reportString.toString().contains(candidateDependency))
-            this.reportString.append(dependency.getBuildFile().toString()).append(";")
-                    .append(dependency).append(";")
-                    .append(DependencyType.UNUSED)
-                    .append("\n");
+            if(!(this.reportString.toString().contains(candidateDependencyUSED) ||
+                    this.reportString.toString().contains(candidateDependencyUNUSED))){
+                this.reportString.append(candidateDependencyUNUSED);
+            }
         }
     }
 

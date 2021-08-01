@@ -1,0 +1,14 @@
+{
+    "type" : "object",
+    "properties" : {
+        "maxItems" : {
+            "type" : "array",
+            "maxItems" : 5            
+        },
+        "maxItemsNotApplicable" : {
+            "type" : "string",
+            "format": "uuid",
+            "maxItems" : 5
+        }
+    }
+}
